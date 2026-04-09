@@ -1,0 +1,647 @@
+# Java Programs for OOP Lab Assignment
+
+## Program 1: Method Overloading - abs() methods
+
+```java
+// MyClass.java
+public class MyClass {
+    
+    // Default constructor
+    public MyClass() {}
+    
+    // abs() for integer
+    public int abs(int n) {
+        return (n < 0) ? -n : n;
+    }
+    
+    // abs() for float (overloaded)
+    public float abs(float n) {
+        return (n < 0) ? -n : n;
+    }
+    
+    // abs() for double (overloaded)
+    public double abs(double n) {
+        return (n < 0) ? -n : n;
+    }
+}
+
+// Driver1.java
+public class Driver1 {
+    public static void main(String[] args) {
+        
+        MyClass obj = new MyClass();
+        
+        // Testing abs() with integer
+        int intVal = -25;
+        System.out.println("Absolute value of integer " + intVal 
+                           + " = " + obj.abs(intVal));
+        
+        // Testing abs() with float
+        float floatVal = -3.75f;
+        System.out.println("Absolute value of float " + floatVal 
+                           + " = " + obj.abs(floatVal));
+        
+        // Testing abs() with double
+        double doubleVal = -9.99;
+        System.out.println("Absolute value of double " + doubleVal 
+                           + " = " + obj.abs(doubleVal));
+    }
+}
+```
+
+### Output:
+```
+Absolute value of integer -25 = 25
+Absolute value of float -3.75 = 3.75
+Absolute value of double -9.99 = 9.99
+```
+
+---
+
+## Program 2: Telephone Billing System
+
+```java
+// CallBase.java - Base class
+public class CallBase {
+    
+    private String callerName;
+    private String callerNumber;
+    
+    // Default constructor
+    public CallBase() {
+        this.callerName   = "Unknown";
+        this.callerNumber = "0000000000";
+    }
+    
+    // Parameterized constructor
+    public CallBase(String callerName, String callerNumber) {
+        this.callerName   = callerName;
+        this.callerNumber = callerNumber;
+    }
+    
+    // Getters and Setters
+    public String getCallerName()              { return callerName;   }
+    public void   setCallerName(String name)   { this.callerName = name; }
+    
+    public String getCallerNumber()            { return callerNumber; }
+    public void   setCallerNumber(String num)  { this.callerNumber = num; }
+    
+    public void displayInfo() {
+        System.out.println("Caller Name   : " + callerName);
+        System.out.println("Caller Number : " + callerNumber);
+    }
+}
+```
+
+```java
+// LocalCall.java
+// Rate: 1 unit per 3 minutes (fraction counted as full 3 min)
+// Assume 1 unit = Rs. 1.00
+public class LocalCall extends CallBase {
+    
+    private int    durationMinutes; // call duration in minutes
+    private double ratePerUnit;     // cost per unit
+    
+    // Default constructor
+    public LocalCall() {
+        super();
+        this.durationMinutes = 0;
+        this.ratePerUnit     = 1.00;
+    }
+    
+    // Parameterized constructor
+    public LocalCall(String callerName, String callerNumber,
+                     int durationMinutes, double ratePerUnit) {
+        super(callerName, callerNumber);
+        // Input validation
+        this.durationMinutes = (durationMinutes > 0) ? durationMinutes : 0;
+        this.ratePerUnit     = (ratePerUnit > 0)     ? ratePerUnit     : 1.00;
+    }
+    
+    // Getters and Setters
+    public int    getDurationMinutes()            { return durationMinutes; }
+    public void   setDurationMinutes(int d)       { 
+        this.durationMinutes = (d > 0) ? d : 0; 
+    }
+    
+    public double getRatePerUnit()                { return ratePerUnit; }
+    public void   setRatePerUnit(double r)        { 
+        this.ratePerUnit = (r > 0) ? r : 1.00; 
+    }
+    
+    // Calculate number of units (ceiling division: fraction = 1 full unit)
+    public int calculateUnits() {
+        return (int) Math.ceil(durationMinutes / 3.0);
+    }
+    
+    // Calculate bill amount
+    public double calculateBill() {
+        return calculateUnits() * ratePerUnit;
+    }
+    
+    // Display local call bill
+    public void displayBill() {
+        System.out.println("========== LOCAL CALL BILL ==========");
+        displayInfo();
+        System.out.println("Duration      : " + durationMinutes + " minutes");
+        System.out.println("Units Charged : " + calculateUnits() + " units");
+        System.out.println("Rate/Unit     : Rs. " + ratePerUnit);
+        System.out.printf ("Total Bill    : Rs. %.2f%n", calculateBill());
+        System.out.println("=====================================");
+    }
+}
+```
+
+```java
+// LongCall.java (STD Call)
+/*
+ * Rate Table (assumed from attachment):
+ * Time Slot       | Rate per unit
+ * 08:00 - 18:00   | Rs. 2.00 / min
+ * 18:00 - 22:00   | Rs. 1.50 / min
+ * 22:00 - 08:00   | Rs. 1.00 / min  (night rate)
+ *
+ * If same area code (STD code) => local rate applied
+ */
+public class LongCall extends CallBase {
+    
+    private int    durationMinutes;
+    private int    callHour;         // 0-23 format
+    private String originCode;       // STD code of origin
+    private String destCode;         // STD code of destination
+    
+    // Default constructor
+    public LongCall() {
+        super();
+        this.durationMinutes = 0;
+        this.callHour        = 10;
+        this.originCode      = "000";
+        this.destCode        = "000";
+    }
+    
+    // Parameterized constructor
+    public LongCall(String callerName, String callerNumber,
+                    int durationMinutes, int callHour,
+                    String originCode, String destCode) {
+        super(callerName, callerNumber);
+        this.durationMinutes = (durationMinutes > 0)              ? durationMinutes : 0;
+        this.callHour        = (callHour >= 0 && callHour <= 23)  ? callHour        : 10;
+        this.originCode      = originCode;
+        this.destCode        = destCode;
+    }
+    
+    // Getters and Setters
+    public int    getDurationMinutes()           { return durationMinutes; }
+    public void   setDurationMinutes(int d)      { 
+        this.durationMinutes = (d > 0) ? d : 0; 
+    }
+    
+    public int    getCallHour()                  { return callHour; }
+    public void   setCallHour(int h)             { 
+        this.callHour = (h >= 0 && h <= 23) ? h : 10; 
+    }
+    
+    public String getOriginCode()                { return originCode; }
+    public void   setOriginCode(String code)     { this.originCode = code; }
+    
+    public String getDestCode()                  { return destCode; }
+    public void   setDestCode(String code)       { this.destCode = code; }
+    
+    // Determine rate per minute based on time slot
+    public double getRatePerMinute() {
+        // Same area code => local STD rate (discounted)
+        if (originCode.equals(destCode)) {
+            return 0.50; // same zone discount
+        }
+        // Peak hours 08:00 - 17:59
+        if (callHour >= 8 && callHour < 18) {
+            return 2.00;
+        }
+        // Evening 18:00 - 21:59
+        else if (callHour >= 18 && callHour < 22) {
+            return 1.50;
+        }
+        // Night 22:00 - 07:59
+        else {
+            return 1.00;
+        }
+    }
+    
+    // Determine time slot description
+    private String getTimeSlotDesc() {
+        if (callHour >= 8 && callHour < 18)  return "Peak    (08:00-18:00)";
+        if (callHour >= 18 && callHour < 22) return "Evening (18:00-22:00)";
+        return "Night   (22:00-08:00)";
+    }
+    
+    // Calculate total bill
+    public double calculateBill() {
+        return durationMinutes * getRatePerMinute();
+    }
+    
+    // Display STD call bill
+    public void displayBill() {
+        System.out.println("========== STD CALL BILL ============");
+        displayInfo();
+        System.out.println("Origin STD Code : " + originCode);
+        System.out.println("Dest   STD Code : " + destCode);
+        System.out.println("Call Hour       : " + callHour + ":00");
+        System.out.println("Time Slot       : " + getTimeSlotDesc());
+        System.out.println("Duration        : " + durationMinutes + " minutes");
+        System.out.printf ("Rate/Minute     : Rs. %.2f%n", getRatePerMinute());
+        System.out.printf ("Total Bill      : Rs. %.2f%n", calculateBill());
+        System.out.println("=====================================");
+    }
+}
+```
+
+```java
+// Driver2.java
+public class Driver2 {
+    public static void main(String[] args) {
+        
+        // Local call: 10 minutes duration, Rs.1 per unit
+        LocalCall lc = new LocalCall("Ravi Kumar", "9831000001", 10, 1.00);
+        lc.displayBill();
+        // 10 min => ceil(10/3) = 4 units => Rs. 4.00
+        
+        System.out.println();
+        
+        // STD call: 15 min, called at 9am, different STD codes
+        LongCall sc1 = new LongCall("Priya Sen", "9831000002",
+                                     15, 9, "033", "022");
+        sc1.displayBill();
+        
+        System.out.println();
+        
+        // STD call: 20 min, called at 8pm, same STD code
+        LongCall sc2 = new LongCall("Amit Das", "9831000003",
+                                     20, 20, "033", "033");
+        sc2.displayBill();
+    }
+}
+```
+
+### Output:
+```
+========== LOCAL CALL BILL ==========
+Caller Name   : Ravi Kumar
+Caller Number : 9831000001
+Duration      : 10 minutes
+Units Charged : 4 units
+Rate/Unit     : Rs. 1.0
+Total Bill    : Rs. 4.00
+=====================================
+
+========== STD CALL BILL ============
+Caller Name     : Priya Sen
+Caller Number   : 9831000002
+Origin STD Code : 033
+Dest   STD Code : 022
+Call Hour       : 9:00
+Time Slot       : Peak    (08:00-18:00)
+Duration        : 15 minutes
+Rate/Minute     : Rs. 2.00
+Total Bill      : Rs. 30.00
+=====================================
+
+========== STD CALL BILL ============
+Caller Name     : Amit Das
+Caller Number   : 9831000003
+Origin STD Code : 033
+Dest   STD Code : 033
+Call Hour       : 20:00
+Time Slot       : Evening (18:00-22:00)
+Duration        : 20 minutes
+Rate/Minute     : Rs. 0.50
+Total Bill      : Rs. 10.00
+=====================================
+```
+
+---
+
+## Program 3: Educational Institution Employee Database
+
+```java
+// Staff.java - Root class
+public class Staff {
+    
+    private int    code;
+    private String name;
+    
+    // Default constructor
+    public Staff() {
+        this.code = 0;
+        this.name = "N/A";
+    }
+    
+    // Parameterized constructor
+    public Staff(int code, String name) {
+        this.code = (code > 0) ? code : 0;
+        this.name = name;
+    }
+    
+    // Getters
+    public int    getCode() { return code; }
+    public String getName() { return name; }
+    
+    // Setters
+    public void setCode(int code) { this.code = (code > 0) ? code : 0; }
+    public void setName(String name) { this.name = name; }
+    
+    // Display method
+    public void displayInfo() {
+        System.out.println("  Staff Code : " + code);
+        System.out.println("  Name       : " + name);
+    }
+}
+```
+
+```java
+// Teacher.java
+public class Teacher extends Staff {
+    
+    private String subject;
+    private String publication;
+    
+    // Default constructor
+    public Teacher() {
+        super();
+        this.subject     = "N/A";
+        this.publication = "N/A";
+    }
+    
+    // Parameterized constructor
+    public Teacher(int code, String name, 
+                   String subject, String publication) {
+        super(code, name);
+        this.subject     = subject;
+        this.publication = publication;
+    }
+    
+    // Getters and Setters
+    public String getSubject()               { return subject;     }
+    public void   setSubject(String s)       { this.subject = s;   }
+    
+    public String getPublication()           { return publication; }
+    public void   setPublication(String p)   { this.publication = p; }
+    
+    @Override
+    public void displayInfo() {
+        System.out.println("--- Teacher Details ---");
+        super.displayInfo();
+        System.out.println("  Subject     : " + subject);
+        System.out.println("  Publication : " + publication);
+    }
+}
+```
+
+```java
+// Officer.java
+public class Officer extends Staff {
+    
+    private String grade;
+    
+    // Default constructor
+    public Officer() {
+        super();
+        this.grade = "N/A";
+    }
+    
+    // Parameterized constructor
+    public Officer(int code, String name, String grade) {
+        super(code, name);
+        this.grade = grade;
+    }
+    
+    // Getter and Setter
+    public String getGrade()             { return grade; }
+    public void   setGrade(String grade) { this.grade = grade; }
+    
+    @Override
+    public void displayInfo() {
+        System.out.println("--- Officer Details ---");
+        super.displayInfo();
+        System.out.println("  Grade : " + grade);
+    }
+}
+```
+
+```java
+// Typist.java
+public class Typist extends Staff {
+    
+    private int speed; // typing speed in WPM
+    
+    // Default constructor
+    public Typist() {
+        super();
+        this.speed = 0;
+    }
+    
+    // Parameterized constructor
+    public Typist(int code, String name, int speed) {
+        super(code, name);
+        this.speed = (speed > 0) ? speed : 0;
+    }
+    
+    // Getter and Setter
+    public int  getSpeed()        { return speed; }
+    public void setSpeed(int spd) { this.speed = (spd > 0) ? spd : 0; }
+    
+    @Override
+    public void displayInfo() {
+        System.out.println("--- Typist Details ---");
+        super.displayInfo();
+        System.out.println("  Typing Speed : " + speed + " WPM");
+    }
+}
+```
+
+```java
+// RegularTypist.java
+public class RegularTypist extends Typist {
+    
+    private double remuneration; // monthly remuneration
+    
+    // Default constructor
+    public RegularTypist() {
+        super();
+        this.remuneration = 0.0;
+    }
+    
+    // Parameterized constructor
+    public RegularTypist(int code, String name, int speed, 
+                         double remuneration) {
+        super(code, name, speed);
+        this.remuneration = (remuneration >= 0) ? remuneration : 0.0;
+    }
+    
+    // Getter and Setter
+    public double getRemuneration()          { return remuneration; }
+    public void   setRemuneration(double r)  { 
+        this.remuneration = (r >= 0) ? r : 0.0; 
+    }
+    
+    @Override
+    public void displayInfo() {
+        System.out.println("--- Regular Typist Details ---");
+        // Call grandparent's info via Typist
+        super.displayInfo();
+        System.out.println("  Remuneration : Rs. " + remuneration 
+                           + " / month");
+    }
+}
+```
+
+```java
+// CasualTypist.java
+public class CasualTypist extends Typist {
+    
+    private double dailyWages;
+    
+    // Default constructor
+    public CasualTypist() {
+        super();
+        this.dailyWages = 0.0;
+    }
+    
+    // Parameterized constructor
+    public CasualTypist(int code, String name, int speed, 
+                        double dailyWages) {
+        super(code, name, speed);
+        this.dailyWages = (dailyWages >= 0) ? dailyWages : 0.0;
+    }
+    
+    // Getter and Setter
+    public double getDailyWages()          { return dailyWages; }
+    public void   setDailyWages(double dw) { 
+        this.dailyWages = (dw >= 0) ? dw : 0.0; 
+    }
+    
+    @Override
+    public void displayInfo() {
+        System.out.println("--- Casual Typist Details ---");
+        super.displayInfo();
+        System.out.println("  Daily Wages  : Rs. " + dailyWages + " / day");
+    }
+}
+```
+
+```java
+// Driver3.java - Test all employee classes
+public class Driver3 {
+    public static void main(String[] args) {
+        
+        System.out.println("========================================");
+        System.out.println("  EDUCATIONAL INSTITUTION EMPLOYEE DB   ");
+        System.out.println("========================================");
+        
+        // Create Teacher
+        Teacher t1 = new Teacher(101, "Dr. Anita Roy",
+                                  "Computer Science",
+                                  "Data Structures in Java");
+        t1.displayInfo();
+        System.out.println();
+        
+        // Create Officer
+        Officer o1 = new Officer(201, "Mr. Rajesh Gupta", "Grade A");
+        o1.displayInfo();
+        System.out.println();
+        
+        // Create Typist (base)
+        Typist ty1 = new Typist(301, "Ms. Sunita Dey", 60);
+        ty1.displayInfo();
+        System.out.println();
+        
+        // Create RegularTypist
+        RegularTypist rt1 = new RegularTypist(302, "Mr. Biplab Das",
+                                               75, 18000.00);
+        rt1.displayInfo();
+        System.out.println();
+        
+        // Create CasualTypist
+        CasualTypist ct1 = new CasualTypist(303, "Ms. Puja Saha",
+                                             50, 650.00);
+        ct1.displayInfo();
+        System.out.println();
+        
+        System.out.println("========================================");
+        
+        // Demonstrate polymorphism with Staff array
+        System.out.println("\n--- All Staff via Polymorphism ---");
+        Staff[] staffArray = { t1, o1, ty1, rt1, ct1 };
+        for (Staff s : staffArray) {
+            s.displayInfo();
+            System.out.println();
+        }
+    }
+}
+```
+
+### Output:
+```
+========================================
+  EDUCATIONAL INSTITUTION EMPLOYEE DB   
+========================================
+--- Teacher Details ---
+  Staff Code  : 101
+  Name        : Dr. Anita Roy
+  Subject     : Computer Science
+  Publication : Data Structures in Java
+
+--- Officer Details ---
+  Staff Code  : 201
+  Name        : Mr. Rajesh Gupta
+  Grade       : Grade A
+
+--- Typist Details ---
+  Staff Code   : 301
+  Name         : Ms. Sunita Dey
+  Typing Speed : 60 WPM
+
+--- Regular Typist Details ---
+--- Typist Details ---
+  Staff Code   : 302
+  Name         : Mr. Biplab Das
+  Typing Speed : 75 WPM
+  Remuneration : Rs. 18000.0 / month
+
+--- Casual Typist Details ---
+--- Typist Details ---
+  Staff Code  : 303
+  Name        : Ms. Puja Saha
+  Typing Speed: 50 WPM
+  Daily Wages : Rs. 650.0 / day
+
+========================================
+
+--- All Staff via Polymorphism ---
+(same output as above via runtime polymorphism)
+```
+
+---
+
+## Class Hierarchy Summary
+
+```
+Object
+  └── Staff (code, name)
+        ├── Teacher  (subject, publication)
+        ├── Officer  (grade)
+        └── Typist   (speed)
+              ├── RegularTypist (remuneration)
+              └── CasualTypist  (dailyWages)
+
+CallBase (callerName, callerNumber)
+  ├── LocalCall  (durationMinutes, ratePerUnit)
+  └── LongCall   (durationMinutes, callHour, originCode, destCode)
+```
+
+> **Key OOP Concepts Applied:**
+> - ✅ **Encapsulation** — all instance variables `private`, accessed via getters/setters
+> - ✅ **Inheritance** — `extends` used throughout hierarchy
+> - ✅ **Polymorphism** — `@Override` on `displayInfo()`, Staff array demo
+> - ✅ **Method Overloading** — three `abs()` methods in Program 1
+> - ✅ **Constructors** — both default and parameterized in every class
+> - ✅ **Input Validation** — negative checks on numeric fields
