@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <limits.h>
+#include <string.h>
+
+#define INF INT_MAX
+#define MAXV 100
+#define MAXE 200
+
+int V, E, src;
+int dist[MAXV][MAXV];   // dist[k][v] = distance after k relaxations
+int parent[MAXV][MAXV]; // parent[k][v] = parent of v after k relaxations
+
+struct Edge {
+    int u, v, w;
+} edges[MAXE];
+
+// Print path recursively using parent array at iteration k
+void printPath(int k, int node) {
+    if (node == src - 1) {
+        printf("%d", src);
+        return;
+    }
+    if (parent[k][node] == -1) {
+        printf("%d", node + 1);
+        return;
+    }
+    printPath(k, parent[k][node]);
+    printf("→%d", node + 1);
+}
+
+void BellmanFord() {
+    // Initialize all distances to INF
+    for (int j = 0; j < V; j++) {
+        dist[0][j] = INF;
+        parent[0][j] = -1;
+    }
+    // Source distance = 0
+    dist[0][src - 1] = 0;
+
+    // Relax edges V-1 times
+    for (int k = 1; k <= V - 1; k++) {
+        // Copy from previous iteration
+        for (int j = 0; j < V; j++) {
+            dist[k][j]   = dist[k-1][j];
+            parent[k][j] = parent[k-1][j];
+        }
+        // Relax each edge
+        for (int i = 0; i < E; i++) {
+            int u = edges[i].u;
+            int v = edges[i].v;
+            int w = edges[i].w;
+            if (dist[k][u] != INF && dist[k][u] + w < dist[k][v]) {
+                dist[k][v]   = dist[k][u] + w;
+                parent[k][v] = u;
+            }
+        }
+    }
+
+    // Check negative weight cycle
+    for (int i = 0; i < E; i++) {
+        int u = edges[i].u;
+        int v = edges[i].v;
+        int w = edges[i].w;
+        if (dist[V-1][u] != INF && dist[V-1][u] + w < dist[V-1][v]) {
+            printf("Negative weight cycle detected!\n");
+            return;
+        }
+    }
+
+    // ---- Print Table ----
+    printf("\n k |");
+    for (int j = 0; j < V; j++) {
+        printf(" %d->%d |", src, j + 1);
+    }
+    printf("\n");
+
+    // Separator line
+    printf("---|");
+    for (int j = 0; j < V; j++) {
+        printf("-------|");
+    }
+    printf("\n");
+
+    // Print each row k = 1 to V-1
+    for (int k = 1; k <= V - 1; k++) {
+        printf(" %d |", k);
+        for (int j = 0; j < V; j++) {
+            if (dist[k][j] == INF)
+                printf("   oo  |");
+            else
+                printf("   %d   |", dist[k][j]);
+        }
+        printf("\n");
+    }
+
+    // ---- Print Paths ----
+    printf("\nPath:\n");
+    int finalK = V - 1;
+    for (int j = 0; j < V; j++) {
+        if (j == src - 1) continue; // skip source
+        printPath(finalK, j);
+        if (dist[finalK][j] == INF)
+            printf(":oo\n");
+        else
+            printf(":%d\n", dist[finalK][j]);
+    }
+}
+
+int main() {
+    printf("Enter number of vertices: ");
+    scanf("%d", &V);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &E);
+
+    printf("Enter source vertex: ");
+    scanf("%d", &src);
+
+    printf("Enter edges (src dest weight):\n");
+    for (int i = 0; i < E; i++) {
+        int u, v, w;
+        printf("Edge %d (u v w): ", i + 1);
+        scanf("%d %d %d", &u, &v, &w);
+        edges[i].u = u - 1;
+        edges[i].v = v - 1;
+        edges[i].w = w;
+    }
+
+    BellmanFord();
+
+    return 0;
+}
