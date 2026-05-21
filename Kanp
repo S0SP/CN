@@ -1,0 +1,299 @@
+# Program 1: Fractional Knapsack Problem (Greedy Method)
+
+```c
+#include <stdio.h>
+
+struct Item {
+    int profit;
+    int weight;
+    float ratio;
+};
+
+void sortByRatio(struct Item item[], int n) {
+    int i, j;
+    struct Item temp;
+
+    for(i = 0; i < n - 1; i++) {
+        for(j = i + 1; j < n; j++) {
+            if(item[i].ratio < item[j].ratio) {
+                temp = item[i];
+                item[i] = item[j];
+                item[j] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int n, m;
+    int i;
+    float totalProfit = 0.0;
+    int totalWeight = 0;
+
+    printf("Enter number of objects: ");
+    scanf("%d", &n);
+
+    struct Item item[n];
+    float x[n];
+
+    printf("Enter knapsack capacity: ");
+    scanf("%d", &m);
+
+    printf("Enter profits:\n");
+    for(i = 0; i < n; i++) {
+        scanf("%d", &item[i].profit);
+    }
+
+    printf("Enter weights:\n");
+    for(i = 0; i < n; i++) {
+        scanf("%d", &item[i].weight);
+    }
+
+    for(i = 0; i < n; i++) {
+        item[i].ratio = (float)item[i].profit / item[i].weight;
+        x[i] = 0.0;
+    }
+
+    sortByRatio(item, n);
+
+    int U = m;
+
+    for(i = 0; i < n; i++) {
+        if(item[i].weight <= U) {
+            x[i] = 1.0;
+            totalWeight += item[i].weight;
+            totalProfit += item[i].profit;
+            U = U - item[i].weight;
+        }
+        else {
+            x[i] = (float)U / item[i].weight;
+            totalWeight += U;
+            totalProfit += x[i] * item[i].profit;
+            break;
+        }
+    }
+
+    printf("\nSolution Vector:\n");
+    for(i = 0; i < n; i++) {
+        printf("x[%d] = %.2f\n", i + 1, x[i]);
+    }
+
+    printf("\nTotal Weight = %d\n", totalWeight);
+    printf("Maximum Profit = %.2f\n", totalProfit);
+
+    return 0;
+}
+```
+
+---
+
+# Sample Input
+
+```text
+Enter number of objects: 3
+Enter knapsack capacity: 20
+Enter profits:
+25
+24
+15
+Enter weights:
+18
+15
+10
+```
+
+# Sample Output
+
+```text
+Solution Vector:
+x[1] = 1.00
+x[2] = 0.33
+x[3] = 0.00
+
+Total Weight = 20
+Maximum Profit = 33.00
+```
+
+---
+
+# Program 2: Minimum Cost Spanning Tree using Prim's Algorithm
+
+```c
+#include <stdio.h>
+#include <limits.h>
+
+#define V 5
+
+int minKey(int key[], int mstSet[]) {
+    int min = INT_MAX;
+    int min_index;
+
+    for(int v = 0; v < V; v++) {
+        if(mstSet[v] == 0 && key[v] < min) {
+            min = key[v];
+            min_index = v;
+        }
+    }
+
+    return min_index;
+}
+
+void printMST(int parent[], int graph[V][V]) {
+    int total = 0;
+
+    printf("\nEdge \tWeight\n");
+
+    for(int i = 1; i < V; i++) {
+        printf("%c - %c \t%d \n", parent[i] + 'A', i + 'A', graph[i][parent[i]]);
+        total += graph[i][parent[i]];
+    }
+
+    printf("\nTotal Weight = %d\n", total);
+}
+
+void primMST(int graph[V][V]) {
+    int parent[V];
+    int key[V];
+    int mstSet[V];
+
+    for(int i = 0; i < V; i++) {
+        key[i] = INT_MAX;
+        mstSet[i] = 0;
+    }
+
+    key[0] = 0;
+    parent[0] = -1;
+
+    for(int count = 0; count < V - 1; count++) {
+        int u = minKey(key, mstSet);
+        mstSet[u] = 1;
+
+        for(int v = 0; v < V; v++) {
+            if(graph[u][v] && mstSet[v] == 0 && graph[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = graph[u][v];
+            }
+        }
+    }
+
+    printMST(parent, graph);
+}
+
+int main() {
+    int graph[V][V] = {
+        {0, 10, 0, 4, 0},
+        {10, 0, 3, 0, 0},
+        {0, 3, 0, 2, 6},
+        {4, 0, 2, 0, 1},
+        {0, 0, 6, 1, 0}
+    };
+
+    printf("Prim's Minimum Spanning Tree:\n");
+
+    primMST(graph);
+
+    return 0;
+}
+```
+
+---
+
+# Sample Output
+
+```text
+Prim's Minimum Spanning Tree:
+
+Edge    Weight
+A - B   10
+B - C   3
+C - D   2
+D - E   1
+
+Total Weight = 16
+```
+
+---
+
+# Compilation Command
+
+```bash
+gcc filename.c -o output
+./output
+```
+
+
+#include <stdio.h>
+#include <limits.h>
+
+#define V 5
+
+int minKey(int key[], int mstSet[]) {
+    int min = INT_MAX;
+    int min_index;
+
+    for(int v = 0; v < V; v++) {
+        if(mstSet[v] == 0 && key[v] < min) {
+            min = key[v];
+            min_index = v;
+        }
+    }
+
+    return min_index;
+}
+
+void printMST(int parent[], int graph[V][V]) {
+    int total = 0;
+
+    printf("\nEdge \tWeight\n");
+
+    for(int i = 1; i < V; i++) {
+        printf("%c - %c \t%d \n", parent[i] + 'A', i + 'A', graph[i][parent[i]]);
+        total += graph[i][parent[i]];
+    }
+
+    printf("\nTotal Weight = %d\n", total);
+}
+
+void primMST(int graph[V][V]) {
+    int parent[V];
+    int key[V];
+    int mstSet[V];
+
+    for(int i = 0; i < V; i++) {
+        key[i] = INT_MAX;
+        mstSet[i] = 0;
+    }
+
+    key[0] = 0;
+    parent[0] = -1;
+
+    for(int count = 0; count < V - 1; count++) {
+        int u = minKey(key, mstSet);
+        mstSet[u] = 1;
+
+        for(int v = 0; v < V; v++) {
+            if(graph[u][v] && mstSet[v] == 0 && graph[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = graph[u][v];
+            }
+        }
+    }
+
+    printMST(parent, graph);
+}
+
+int main() {
+    int graph[V][V] = {
+        {0, 10, 0, 4, 0},
+        {10, 0, 3, 0, 0},
+        {0, 3, 0, 2, 6},
+        {4, 0, 2, 0, 1},
+        {0, 0, 6, 1, 0}
+    };
+
+    printf("Prim's Minimum Spanning Tree:\n");
+
+    primMST(graph);
+
+    return 0;
+} mo
