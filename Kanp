@@ -1,3 +1,8 @@
+// Fractional Knapsack using
+// 1. Maximum Profit
+// 2. Minimum Weight
+// 3. Maximum Profit/Weight Ratio
+
 #include <stdio.h>
 
 struct Item {
@@ -6,17 +11,22 @@ struct Item {
     float ratio;
 };
 
-void sortByProfit(struct Item item[], int n) {
+void copyItems(struct Item source[], struct Item dest[], int n) {
+    int i;
 
+    for(i = 0; i < n; i++) {
+        dest[i] = source[i];
+    }
+}
+
+void sortByProfit(struct Item item[], int n) {
     int i, j;
     struct Item temp;
 
     for(i = 0; i < n - 1; i++) {
-
         for(j = i + 1; j < n; j++) {
 
             if(item[i].profit < item[j].profit) {
-
                 temp = item[i];
                 item[i] = item[j];
                 item[j] = temp;
@@ -26,16 +36,13 @@ void sortByProfit(struct Item item[], int n) {
 }
 
 void sortByWeight(struct Item item[], int n) {
-
     int i, j;
     struct Item temp;
 
     for(i = 0; i < n - 1; i++) {
-
         for(j = i + 1; j < n; j++) {
 
             if(item[i].weight > item[j].weight) {
-
                 temp = item[i];
                 item[i] = item[j];
                 item[j] = temp;
@@ -45,16 +52,13 @@ void sortByWeight(struct Item item[], int n) {
 }
 
 void sortByRatio(struct Item item[], int n) {
-
     int i, j;
     struct Item temp;
 
     for(i = 0; i < n - 1; i++) {
-
         for(j = i + 1; j < n; j++) {
 
             if(item[i].ratio < item[j].ratio) {
-
                 temp = item[i];
                 item[i] = item[j];
                 item[j] = temp;
@@ -63,15 +67,16 @@ void sortByRatio(struct Item item[], int n) {
     }
 }
 
-void fractionalKnapsack(struct Item item[], int n, int m) {
+void fractionalKnapsack(struct Item item[], int n, int capacity) {
 
     float x[n];
     int i;
-    int remaining = m;
+    int remaining = capacity;
     float totalProfit = 0;
+    float totalWeight = 0;
 
     for(i = 0; i < n; i++) {
-        x[i] = 0;
+        x[i] = 0.0;
     }
 
     for(i = 0; i < n; i++) {
@@ -80,20 +85,21 @@ void fractionalKnapsack(struct Item item[], int n, int m) {
 
             x[i] = 1.0;
 
-            remaining =
-                remaining - item[i].weight;
+            remaining = remaining - item[i].weight;
 
-            totalProfit =
-                totalProfit + item[i].profit;
+            totalWeight = totalWeight + item[i].weight;
+
+            totalProfit = totalProfit + item[i].profit;
         }
         else {
 
-            x[i] =
-                (float)remaining / item[i].weight;
+            x[i] = (float)remaining / item[i].weight;
 
-            totalProfit =
-                totalProfit +
-                (x[i] * item[i].profit);
+            totalWeight = totalWeight + (x[i] * item[i].weight);
+
+            totalProfit = totalProfit + (x[i] * item[i].profit);
+
+            remaining = 0;
 
             break;
         }
@@ -102,163 +108,146 @@ void fractionalKnapsack(struct Item item[], int n, int m) {
     printf("\nSolution Vector:\n");
 
     for(i = 0; i < n; i++) {
-
-        printf("x%d = %.2f\n", i + 1, x[i]);
+        printf("x[%d] = %.2f\n", i + 1, x[i]);
     }
 
-    printf("\nMaximum Profit = %.2f\n",
-           totalProfit);
+    printf("\nTotal Weight = %.2f\n", totalWeight);
+
+    printf("Maximum Profit = %.2f\n", totalProfit);
 }
 
 int main() {
 
-    int n, m;
-    int i, choice;
+    int n, capacity;
+    int i;
 
     printf("Enter number of objects: ");
     scanf("%d", &n);
 
-    struct Item item[n];
+    struct Item original[n];
 
     printf("Enter knapsack capacity: ");
-    scanf("%d", &m);
+    scanf("%d", &capacity);
 
     printf("Enter profits:\n");
 
     for(i = 0; i < n; i++) {
-
-        scanf("%d", &item[i].profit);
+        scanf("%d", &original[i].profit);
     }
 
     printf("Enter weights:\n");
 
     for(i = 0; i < n; i++) {
 
-        scanf("%d", &item[i].weight);
+        scanf("%d", &original[i].weight);
 
-        item[i].ratio =
-            (float)item[i].profit /
-            item[i].weight;
+        original[i].ratio =
+            (float)original[i].profit / original[i].weight;
     }
 
-    printf("\n1. Sort by Profit");
-    printf("\n2. Sort by Weight");
-    printf("\n3. Sort by Profit/Weight Ratio");
+    // 1. Maximum Profit
+    struct Item byProfit[n];
 
-    printf("\n\nEnter your choice: ");
-    scanf("%d", &choice);
+    copyItems(original, byProfit, n);
 
-    switch(choice) {
+    sortByProfit(byProfit, n);
 
-        case 1:
-            sortByProfit(item, n);
+    printf("\n====================================");
+    printf("\nKnapsack by Maximum Profit");
+    printf("\n====================================");
 
-            printf("\nKnapsack by Maximum Profit\n");
+    fractionalKnapsack(byProfit, n, capacity);
 
-            fractionalKnapsack(item, n, m);
+    // 2. Minimum Weight
+    struct Item byWeight[n];
 
-            break;
+    copyItems(original, byWeight, n);
 
-        case 2:
-            sortByWeight(item, n);
+    sortByWeight(byWeight, n);
 
-            printf("\nKnapsack by Minimum Weight\n");
+    printf("\n\n====================================");
+    printf("\nKnapsack by Minimum Weight");
+    printf("\n====================================");
 
-            fractionalKnapsack(item, n, m);
+    fractionalKnapsack(byWeight, n, capacity);
 
-            break;
+    // 3. Maximum Profit/Weight Ratio
+    struct Item byRatio[n];
 
-        case 3:
-            sortByRatio(item, n);
+    copyItems(original, byRatio, n);
 
-            printf("\nKnapsack by Maximum Profit/Weight Ratio\n");
+    sortByRatio(byRatio, n);
 
-            fractionalKnapsack(item, n, m);
+    printf("\n\n====================================");
+    printf("\nKnapsack by Maximum Profit/Weight Ratio");
+    printf("\n====================================");
 
-            break;
-
-        default:
-            printf("\nInvalid Choice");
-    }
+    fractionalKnapsack(byRatio, n, capacity);
 
     return 0;
 }
 
-```text
-Enter number of objects: 3
-Enter knapsack capacity: 20
-Enter profits:
-25
-24
-15
-Enter weights:
-18
-15
-10
-```
 
-# Sample Output
 
-```text
-Solution Vector:
-x[1] = 1.00
-x[2] = 0.33
-x[3] = 0.00
 
-Total Weight = 20
-Maximum Profit = 33.00
-```
+prims 
 
----
 
-# Program 2: Minimum Cost Spanning Tree using Prim's Algorithm
 
-```c
+// Minimum Cost Spanning Tree using Prim's Algorithm
+
 #include <stdio.h>
 #include <limits.h>
 
 #define MAX 20
 
 int minKey(int key[], int mstSet[], int V) {
+
     int min = INT_MAX;
-    int min_index = -1;
+    int minIndex = -1;
 
     for(int v = 0; v < V; v++) {
+
         if(mstSet[v] == 0 && key[v] < min) {
+
             min = key[v];
-            min_index = v;
+            minIndex = v;
         }
     }
 
-    return min_index;
+    return minIndex;
 }
 
 void printMST(int parent[], int graph[MAX][MAX], int V) {
+
     int total = 0;
 
-    printf("
-Edges in Minimum Spanning Tree:
-");
-    printf("Edge 	Weight
-");
+    printf("\nEdges in Minimum Spanning Tree:\n");
+    printf("Edge \tWeight\n");
 
     for(int i = 1; i < V; i++) {
-        printf("%c - %c 	%d
-", parent[i] + 'A', i + 'A', graph[i][parent[i]]);
+
+        printf("%c - %c \t%d\n",
+               parent[i] + 'A',
+               i + 'A',
+               graph[i][parent[i]]);
+
         total += graph[i][parent[i]];
     }
 
-    printf("
-Total Weight = %d
-", total);
+    printf("\nTotal Weight = %d\n", total);
 }
 
 void primMST(int graph[MAX][MAX], int V) {
+
     int parent[MAX];
     int key[MAX];
     int mstSet[MAX];
 
-    for(int i = 0; i < V; i++) {
+    int i, count, u, v;
+
+    for(i = 0; i < V; i++) {
+
         key[i] = INT_MAX;
         mstSet[i] = 0;
     }
@@ -266,8 +255,9 @@ void primMST(int graph[MAX][MAX], int V) {
     key[0] = 0;
     parent[0] = -1;
 
-    for(int count = 0; count < V - 1; count++) {
-        int u = minKey(key, mstSet, V);
+    for(count = 0; count < V - 1; count++) {
+
+        u = minKey(key, mstSet, V);
 
         if(u == -1) {
             break;
@@ -275,8 +265,12 @@ void primMST(int graph[MAX][MAX], int V) {
 
         mstSet[u] = 1;
 
-        for(int v = 0; v < V; v++) {
-            if(graph[u][v] != 0 && mstSet[v] == 0 && graph[u][v] < key[v]) {
+        for(v = 0; v < V; v++) {
+
+            if(graph[u][v] != 0 &&
+               mstSet[v] == 0 &&
+               graph[u][v] < key[v]) {
+
                 parent[v] = u;
                 key[v] = graph[u][v];
             }
@@ -287,65 +281,26 @@ void primMST(int graph[MAX][MAX], int V) {
 }
 
 int main() {
+
     int V;
     int graph[MAX][MAX];
 
     printf("Enter number of vertices: ");
     scanf("%d", &V);
 
-    printf("Enter adjacency matrix:
-");
+    printf("Enter adjacency matrix:\n");
 
     for(int i = 0; i < V; i++) {
+
         for(int j = 0; j < V; j++) {
+
             scanf("%d", &graph[i][j]);
         }
     }
 
-    printf("
-Prim's Minimum Spanning Tree:
-");
+    printf("\nPrim's Minimum Spanning Tree:\n");
 
     primMST(graph, V);
 
     return 0;
 }
-```
-
----
-
-# Sample Input
-
-```text
-Enter number of vertices: 5
-Enter adjacency matrix:
-0 10 0 4 0
-10 0 3 0 0
-0 3 0 2 6
-4 0 2 0 1
-0 0 6 1 0
-```
-
-# Sample Output
-
-```text
-Prim's Minimum Spanning Tree:
-
-Edges in Minimum Spanning Tree:
-Edge    Weight
-D - B   4
-D - C   2
-C - A   3
-D - E   1
-
-Total Weight = 10
-```
-
----
-
-# Compilation Command
-
-```bash
-gcc filename.c -o output
-./output
-```
