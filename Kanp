@@ -1,6 +1,3 @@
-# Program 1: Fractional Knapsack Problem (Greedy Method)
-
-```c
 #include <stdio.h>
 
 struct Item {
@@ -9,13 +6,17 @@ struct Item {
     float ratio;
 };
 
-void sortByRatio(struct Item item[], int n) {
+void sortByProfit(struct Item item[], int n) {
+
     int i, j;
     struct Item temp;
 
     for(i = 0; i < n - 1; i++) {
+
         for(j = i + 1; j < n; j++) {
-            if(item[i].ratio < item[j].ratio) {
+
+            if(item[i].profit < item[j].profit) {
+
                 temp = item[i];
                 item[i] = item[j];
                 item[j] = temp;
@@ -24,70 +25,164 @@ void sortByRatio(struct Item item[], int n) {
     }
 }
 
-int main() {
-    int n, m;
-    int i;
-    float totalProfit = 0.0;
-    int totalWeight = 0;
+void sortByWeight(struct Item item[], int n) {
 
-    printf("Enter number of objects: ");
-    scanf("%d", &n);
+    int i, j;
+    struct Item temp;
 
-    struct Item item[n];
+    for(i = 0; i < n - 1; i++) {
+
+        for(j = i + 1; j < n; j++) {
+
+            if(item[i].weight > item[j].weight) {
+
+                temp = item[i];
+                item[i] = item[j];
+                item[j] = temp;
+            }
+        }
+    }
+}
+
+void sortByRatio(struct Item item[], int n) {
+
+    int i, j;
+    struct Item temp;
+
+    for(i = 0; i < n - 1; i++) {
+
+        for(j = i + 1; j < n; j++) {
+
+            if(item[i].ratio < item[j].ratio) {
+
+                temp = item[i];
+                item[i] = item[j];
+                item[j] = temp;
+            }
+        }
+    }
+}
+
+void fractionalKnapsack(struct Item item[], int n, int m) {
+
     float x[n];
+    int i;
+    int remaining = m;
+    float totalProfit = 0;
 
-    printf("Enter knapsack capacity: ");
-    scanf("%d", &m);
-
-    printf("Enter profits:\n");
     for(i = 0; i < n; i++) {
-        scanf("%d", &item[i].profit);
-    }
-
-    printf("Enter weights:\n");
-    for(i = 0; i < n; i++) {
-        scanf("%d", &item[i].weight);
+        x[i] = 0;
     }
 
     for(i = 0; i < n; i++) {
-        item[i].ratio = (float)item[i].profit / item[i].weight;
-        x[i] = 0.0;
-    }
 
-    sortByRatio(item, n);
+        if(item[i].weight <= remaining) {
 
-    int U = m;
-
-    for(i = 0; i < n; i++) {
-        if(item[i].weight <= U) {
             x[i] = 1.0;
-            totalWeight += item[i].weight;
-            totalProfit += item[i].profit;
-            U = U - item[i].weight;
+
+            remaining =
+                remaining - item[i].weight;
+
+            totalProfit =
+                totalProfit + item[i].profit;
         }
         else {
-            x[i] = (float)U / item[i].weight;
-            totalWeight += U;
-            totalProfit += x[i] * item[i].profit;
+
+            x[i] =
+                (float)remaining / item[i].weight;
+
+            totalProfit =
+                totalProfit +
+                (x[i] * item[i].profit);
+
             break;
         }
     }
 
     printf("\nSolution Vector:\n");
+
     for(i = 0; i < n; i++) {
-        printf("x[%d] = %.2f\n", i + 1, x[i]);
+
+        printf("x%d = %.2f\n", i + 1, x[i]);
     }
 
-    printf("\nTotal Weight = %d\n", totalWeight);
-    printf("Maximum Profit = %.2f\n", totalProfit);
+    printf("\nMaximum Profit = %.2f\n",
+           totalProfit);
+}
+
+int main() {
+
+    int n, m;
+    int i, choice;
+
+    printf("Enter number of objects: ");
+    scanf("%d", &n);
+
+    struct Item item[n];
+
+    printf("Enter knapsack capacity: ");
+    scanf("%d", &m);
+
+    printf("Enter profits:\n");
+
+    for(i = 0; i < n; i++) {
+
+        scanf("%d", &item[i].profit);
+    }
+
+    printf("Enter weights:\n");
+
+    for(i = 0; i < n; i++) {
+
+        scanf("%d", &item[i].weight);
+
+        item[i].ratio =
+            (float)item[i].profit /
+            item[i].weight;
+    }
+
+    printf("\n1. Sort by Profit");
+    printf("\n2. Sort by Weight");
+    printf("\n3. Sort by Profit/Weight Ratio");
+
+    printf("\n\nEnter your choice: ");
+    scanf("%d", &choice);
+
+    switch(choice) {
+
+        case 1:
+            sortByProfit(item, n);
+
+            printf("\nKnapsack by Maximum Profit\n");
+
+            fractionalKnapsack(item, n, m);
+
+            break;
+
+        case 2:
+            sortByWeight(item, n);
+
+            printf("\nKnapsack by Minimum Weight\n");
+
+            fractionalKnapsack(item, n, m);
+
+            break;
+
+        case 3:
+            sortByRatio(item, n);
+
+            printf("\nKnapsack by Maximum Profit/Weight Ratio\n");
+
+            fractionalKnapsack(item, n, m);
+
+            break;
+
+        default:
+            printf("\nInvalid Choice");
+    }
 
     return 0;
 }
-```
-
----
-
-# Sample Input
 
 ```text
 Enter number of objects: 3
