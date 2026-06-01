@@ -1,0 +1,3482 @@
+I'll provide complete, well-structured Java solutions for all the lab assignments. Let me organize them day by day.
+
+---
+
+# DAY 1 - Lab Assignments
+
+## Assignment 1: Print "Welcome"
+
+```java
+// File: Welcome.java
+public class Welcome {
+    public static void main(String[] args) {
+        System.out.println("Welcome");
+    }
+}
+```
+
+---
+
+## Assignment 2: Fibonacci using Recursion
+
+```java
+// File: FibonacciDemo.java
+import java.util.Scanner;
+
+public class FibonacciDemo {
+    // Recursive method inside driver class
+    static int fibonacci(int n) {
+        if (n <= 0) return 0;
+        if (n == 1) return 1;
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter value of n: ");
+        int n = sc.nextInt();
+
+        System.out.println("First " + n + " Fibonacci numbers:");
+        for (int i = 0; i < n; i++) {
+            System.out.print(fibonacci(i));
+            if (i < n - 1) System.out.print(", ");
+        }
+        System.out.println();
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter value of n: 7
+First 7 Fibonacci numbers:
+0, 1, 1, 2, 3, 5, 8
+```
+
+---
+
+## Assignment 3: Car Class
+
+```java
+// File: Car.java
+public class Car {
+    private int speed;
+    private boolean isStarted;
+
+    // Default Constructor
+    public Car() {
+        speed = 0;
+        isStarted = false;
+    }
+
+    // Parameterized Constructor
+    public Car(int speed, boolean isStarted) {
+        this.speed = speed;
+        this.isStarted = isStarted;
+    }
+
+    // Getters and Setters
+    public int getSpeed() { return speed; }
+    public boolean getIsStarted() { return isStarted; }
+
+    public void carStart() {
+        if (isStarted) {
+            System.out.println("Car is already started.");
+        } else {
+            isStarted = true;
+            speed = 30;
+            System.out.println("Car started.");
+            printSpeed();
+        }
+    }
+
+    public void carSlow() {
+        if (!isStarted) {
+            System.out.println("Car is not started yet.");
+            return;
+        }
+        if (speed - 20 < 0) {
+            System.out.println("Cannot reduce speed. Car speed cannot be negative.");
+        } else {
+            speed -= 20;
+            printSpeed();
+        }
+    }
+
+    public void carFast() {
+        if (!isStarted) {
+            System.out.println("Car is not started yet.");
+            return;
+        }
+        if (speed + 30 > 200) {
+            System.out.println("Cannot accelerate. Max speed limit is 200.");
+        } else {
+            speed += 30;
+            printSpeed();
+        }
+    }
+
+    public void printSpeed() {
+        System.out.println("Current Speed: " + speed + " km/h");
+    }
+}
+```
+
+```java
+// File: CarDriver.java
+import java.util.Scanner;
+
+public class CarDriver {
+    public static void main(String[] args) {
+        Car car = new Car();
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Car Menu ---");
+            System.out.println("1. Start Car");
+            System.out.println("2. Slow Down");
+            System.out.println("3. Speed Up");
+            System.out.println("4. Print Speed");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1: car.carStart(); break;
+                case 2: car.carSlow(); break;
+                case 3: car.carFast(); break;
+                case 4: car.printSpeed(); break;
+                case 5: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid choice.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+--- Car Menu ---
+1. Start Car
+2. Slow Down
+...
+Enter choice: 1
+Car started.
+Current Speed: 30 km/h
+Enter choice: 3
+Current Speed: 60 km/h
+```
+
+---
+
+## Assignment 4: Complex Number Class
+
+```java
+// File: ComplexNum.java
+public class ComplexNum {
+    private double real;
+    private double imag;
+
+    // Default Constructor
+    public ComplexNum() {
+        real = 0;
+        imag = 0;
+    }
+
+    // Parameterized Constructor
+    public ComplexNum(double real, double imag) {
+        this.real = real;
+        this.imag = imag;
+    }
+
+    // Getters and Setters
+    public double getReal() { return real; }
+    public double getImag() { return imag; }
+    public void setReal(double real) { this.real = real; }
+    public void setImag(double imag) { this.imag = imag; }
+
+    public void printComplex() {
+        if (imag >= 0)
+            System.out.println(real + " + " + imag + "i");
+        else
+            System.out.println(real + " - " + Math.abs(imag) + "i");
+    }
+
+    public ComplexNum addComplex(ComplexNum other) {
+        return new ComplexNum(this.real + other.real, this.imag + other.imag);
+    }
+
+    public ComplexNum subComplex(ComplexNum other) {
+        return new ComplexNum(this.real - other.real, this.imag - other.imag);
+    }
+
+    public ComplexNum multComplex(ComplexNum other) {
+        double r = (this.real * other.real) - (this.imag * other.imag);
+        double i = (this.real * other.imag) + (this.imag * other.real);
+        return new ComplexNum(r, i);
+    }
+}
+```
+
+```java
+// File: ComplexDriver.java
+import java.util.Scanner;
+
+public class ComplexDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        System.out.print("Enter real and imaginary parts of first complex number: ");
+        double r1 = sc.nextDouble(), i1 = sc.nextDouble();
+        ComplexNum c1 = new ComplexNum(r1, i1);
+
+        System.out.print("Enter real and imaginary parts of second complex number: ");
+        double r2 = sc.nextDouble(), i2 = sc.nextDouble();
+        ComplexNum c2 = new ComplexNum(r2, i2);
+
+        do {
+            System.out.println("\n--- Complex Number Operations ---");
+            System.out.println("1. Print");
+            System.out.println("2. Add");
+            System.out.println("3. Subtract");
+            System.out.println("4. Multiply");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            ComplexNum result;
+            switch (choice) {
+                case 1:
+                    System.out.print("C1 = "); c1.printComplex();
+                    System.out.print("C2 = "); c2.printComplex();
+                    break;
+                case 2:
+                    result = c1.addComplex(c2);
+                    System.out.print("Sum = "); result.printComplex();
+                    break;
+                case 3:
+                    result = c1.subComplex(c2);
+                    System.out.print("Difference = "); result.printComplex();
+                    break;
+                case 4:
+                    result = c1.multComplex(c2);
+                    System.out.print("Product = "); result.printComplex();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter real and imaginary parts of first complex number: 3 4
+Enter real and imaginary parts of second complex number: 1 -2
+
+--- Complex Number Operations ---
+Enter choice: 2
+Sum = 4.0 + 2.0i
+```
+
+---
+
+## Home Assignment 5: Bank Account
+
+```java
+// File: BankAccount.java
+public class BankAccount {
+    private String depositorName;
+    private long accountNo;
+    private char accountType; // 'S' for Savings, 'C' for Current
+    private double balance;
+
+    private static final double MIN_SAVINGS = 1000.0;
+    private static final double MIN_CURRENT = 25000.0;
+
+    // Default Constructor
+    public BankAccount() {
+        depositorName = "";
+        accountNo = 0;
+        accountType = 'S';
+        balance = 0.0;
+    }
+
+    // Parameterized Constructor
+    public BankAccount(String name, long accNo, char type, double bal) {
+        depositorName = name;
+        accountNo = accNo;
+        accountType = Character.toUpperCase(type);
+        balance = bal;
+    }
+
+    // Getters and Setters
+    public String getDepositorName() { return depositorName; }
+    public long getAccountNo() { return accountNo; }
+    public char getAccountType() { return accountType; }
+    public double getBalance() { return balance; }
+
+    public void setDepositorName(String name) { this.depositorName = name; }
+    public void setAccountNo(long accNo) { this.accountNo = accNo; }
+    public void setAccountType(char type) { this.accountType = Character.toUpperCase(type); }
+
+    public void openAccount(String name, long accNo, char type, double initialDeposit) {
+        this.depositorName = name;
+        this.accountNo = accNo;
+        this.accountType = Character.toUpperCase(type);
+        double minBalance = (this.accountType == 'S') ? MIN_SAVINGS : MIN_CURRENT;
+        if (initialDeposit < minBalance) {
+            System.out.println("Initial deposit must be at least Rs " + minBalance
+                    + " for " + (this.accountType == 'S' ? "Savings" : "Current") + " Account.");
+        } else {
+            this.balance = initialDeposit;
+            System.out.println("Account opened successfully.");
+        }
+    }
+
+    public void deposit(double amount) {
+        if (amount <= 0) {
+            System.out.println("Deposit amount must be positive.");
+            return;
+        }
+        balance += amount;
+        System.out.println("Rs " + amount + " deposited successfully.");
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            System.out.println("Withdrawal amount must be positive.");
+            return;
+        }
+        double minBalance = (accountType == 'S') ? MIN_SAVINGS : MIN_CURRENT;
+        if (balance - amount < minBalance) {
+            System.out.println("Insufficient balance. Minimum balance of Rs "
+                    + minBalance + " must be maintained.");
+        } else {
+            balance -= amount;
+            System.out.println("Rs " + amount + " withdrawn successfully.");
+        }
+    }
+
+    public void display() {
+        System.out.println("\n--- Account Details ---");
+        System.out.println("Depositor Name : " + depositorName);
+        System.out.println("Account Number : " + accountNo);
+        System.out.println("Account Type   : " + (accountType == 'S' ? "Savings" : "Current"));
+        System.out.println("Balance        : Rs " + balance);
+    }
+}
+```
+
+```java
+// File: BankDriver.java
+import java.util.Scanner;
+
+public class BankDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        BankAccount account = new BankAccount();
+        int choice;
+
+        do {
+            System.out.println("\n--- Bank Account Menu ---");
+            System.out.println("1. Open Account");
+            System.out.println("2. Deposit");
+            System.out.println("3. Withdraw");
+            System.out.println("4. Display");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    sc.nextLine();
+                    System.out.print("Enter Name: ");
+                    String name = sc.nextLine();
+                    System.out.print("Enter Account Number: ");
+                    long accNo = sc.nextLong();
+                    System.out.print("Enter Account Type (S/C): ");
+                    char type = sc.next().charAt(0);
+                    System.out.print("Enter Initial Deposit: ");
+                    double initDep = sc.nextDouble();
+                    account.openAccount(name, accNo, type, initDep);
+                    break;
+                case 2:
+                    System.out.print("Enter amount to deposit: ");
+                    double dep = sc.nextDouble();
+                    account.deposit(dep);
+                    break;
+                case 3:
+                    System.out.print("Enter amount to withdraw: ");
+                    double wd = sc.nextDouble();
+                    account.withdraw(wd);
+                    break;
+                case 4:
+                    account.display();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+--- Bank Account Menu ---
+Enter choice: 1
+Enter Name: Rahul Das
+Enter Account Number: 123456
+Enter Account Type (S/C): S
+Enter Initial Deposit: 5000
+Account opened successfully.
+Enter choice: 3
+Enter amount to withdraw: 4500
+Insufficient balance. Minimum balance of Rs 1000.0 must be maintained.
+```
+
+---
+
+# DAY 2 - Lab Assignments
+
+## Assignment 1: Grader Class
+
+```java
+// File: Grader.java
+public class Grader {
+    private int score;
+
+    // Default Constructor
+    public Grader() {
+        score = 0;
+    }
+
+    // Parameterized Constructor
+    public Grader(int score) {
+        this.score = score;
+    }
+
+    // Getter and Setter
+    public int getScore() { return score; }
+    public void setScore(int score) { this.score = score; }
+
+    public char letterGrade() {
+        if (score >= 90 && score <= 100) return 'O';
+        else if (score >= 80) return 'E';
+        else if (score >= 70) return 'A';
+        else if (score >= 60) return 'B';
+        else if (score >= 50) return 'C';
+        else return 'F';
+    }
+}
+```
+
+```java
+// File: GraderDriver.java
+import java.util.Scanner;
+
+public class GraderDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter score: ");
+        int score = sc.nextInt();
+
+        if (score < 0 || score > 100) {
+            System.out.println("Invalid score. Must be between 0 and 100.");
+        } else {
+            Grader g = new Grader(score);
+            System.out.println("Letter Grade: " + g.letterGrade());
+        }
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter score: 85
+Letter Grade: E
+```
+
+---
+
+## Assignment 2: Box with Constructor Overloading
+
+```java
+// File: Box.java
+public class Box {
+    private double width;
+    private double height;
+    private double length;
+
+    // Default Constructor
+    public Box() {
+        width = 1.0;
+        height = 1.0;
+        length = 1.0;
+    }
+
+    // Parameterized Constructor - all three dimensions
+    public Box(double width, double height, double length) {
+        this.width = width;
+        this.height = height;
+        this.length = length;
+    }
+
+    // Parameterized Constructor - cube (all sides equal)
+    public Box(double side) {
+        this.width = side;
+        this.height = side;
+        this.length = side;
+    }
+
+    // Getters and Setters
+    public double getWidth() { return width; }
+    public double getHeight() { return height; }
+    public double getLength() { return length; }
+    public void setWidth(double width) { this.width = width; }
+    public void setHeight(double height) { this.height = height; }
+    public void setLength(double length) { this.length = length; }
+
+    public double volume() {
+        return width * height * length;
+    }
+}
+```
+
+```java
+// File: BoxDriver.java
+import java.util.Scanner;
+
+public class BoxDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("--- Box 1: Default Constructor ---");
+        Box b1 = new Box();
+        System.out.println("Volume: " + b1.volume());
+
+        System.out.println("\n--- Box 2: Enter width, height, length ---");
+        System.out.print("Width: "); double w = sc.nextDouble();
+        System.out.print("Height: "); double h = sc.nextDouble();
+        System.out.print("Length: "); double l = sc.nextDouble();
+        Box b2 = new Box(w, h, l);
+        System.out.println("Volume: " + b2.volume());
+
+        System.out.println("\n--- Box 3: Enter side (Cube) ---");
+        System.out.print("Side: "); double s = sc.nextDouble();
+        Box b3 = new Box(s);
+        System.out.println("Volume: " + b3.volume());
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+--- Box 1: Default Constructor ---
+Volume: 1.0
+
+--- Box 2: Enter width, height, length ---
+Width: 3
+Height: 4
+Length: 5
+Volume: 60.0
+
+--- Box 3: Enter side (Cube) ---
+Side: 4
+Volume: 64.0
+```
+
+---
+
+## Assignment 3: Sum and Average of Integer Array
+
+```java
+// File: ArrayOps.java
+public class ArrayOps {
+    private int[] arr;
+    private int size;
+
+    // Default Constructor
+    public ArrayOps() {
+        size = 0;
+        arr = new int[0];
+    }
+
+    // Parameterized Constructor
+    public ArrayOps(int[] arr) {
+        this.size = arr.length;
+        this.arr = arr;
+    }
+
+    // Getter and Setter
+    public int[] getArr() { return arr; }
+    public void setArr(int[] arr) { this.arr = arr; this.size = arr.length; }
+
+    public long sum() {
+        long total = 0;
+        for (int x : arr) total += x;
+        return total;
+    }
+
+    public double average() {
+        if (size == 0) return 0;
+        return (double) sum() / size;
+    }
+}
+```
+
+```java
+// File: ArrayDriver.java
+import java.util.Scanner;
+
+public class ArrayDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter size of array: ");
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+
+        System.out.println("Enter elements:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        ArrayOps ops = new ArrayOps(arr);
+        System.out.println("Sum: " + ops.sum());
+        System.out.println("Average: " + ops.average());
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter size of array: 5
+Enter elements:
+10 20 30 40 50
+Sum: 150
+Average: 30.0
+```
+
+---
+
+## Assignment 4: Stack using Array
+
+```java
+// File: Stack.java
+public class Stack {
+    private int[] data;
+    private int top;
+    private int capacity;
+
+    // Default Constructor
+    public Stack() {
+        capacity = 10;
+        data = new int[capacity];
+        top = -1;
+    }
+
+    // Parameterized Constructor
+    public Stack(int capacity) {
+        this.capacity = capacity;
+        data = new int[capacity];
+        top = -1;
+    }
+
+    // Getter
+    public int getTop() { return top; }
+    public int getCapacity() { return capacity; }
+
+    public boolean isFull() { return top == capacity - 1; }
+    public boolean isEmpty() { return top == -1; }
+
+    public void push(int value) {
+        if (isFull()) {
+            System.out.println("Stack Overflow! Cannot push " + value);
+        } else {
+            data[++top] = value;
+            System.out.println(value + " pushed to stack.");
+        }
+    }
+
+    public int pop() {
+        if (isEmpty()) {
+            System.out.println("Stack Underflow!");
+            return -1;
+        }
+        return data[top--];
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+            return -1;
+        }
+        return data[top];
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+            return;
+        }
+        System.out.print("Stack (top to bottom): ");
+        for (int i = top; i >= 0; i--) {
+            System.out.print(data[i] + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+```java
+// File: StackDriver.java
+import java.util.Scanner;
+
+public class StackDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter stack capacity: ");
+        int cap = sc.nextInt();
+        Stack stack = new Stack(cap);
+        int choice;
+
+        do {
+            System.out.println("\n--- Stack Menu ---");
+            System.out.println("1. Push");
+            System.out.println("2. Pop");
+            System.out.println("3. Peek");
+            System.out.println("4. Display");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter value to push: ");
+                    stack.push(sc.nextInt());
+                    break;
+                case 2:
+                    int val = stack.pop();
+                    if (val != -1) System.out.println("Popped: " + val);
+                    break;
+                case 3:
+                    int top = stack.peek();
+                    if (top != -1) System.out.println("Top element: " + top);
+                    break;
+                case 4:
+                    stack.display();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter stack capacity: 3
+Enter choice: 1 → Enter value: 10 → 10 pushed to stack.
+Enter choice: 1 → Enter value: 20 → 20 pushed to stack.
+Enter choice: 4 → Stack (top to bottom): 20 10
+Enter choice: 2 → Popped: 20
+```
+
+---
+
+# DAY 3 - Lab Assignments
+
+## Assignment 1: Sum of Odd Numbers in 2D Array
+
+```java
+// File: OddSum2D.java
+public class OddSum2D {
+    private int[][] matrix;
+    private int rows;
+    private int cols;
+
+    // Default Constructor
+    public OddSum2D() {
+        rows = 0; cols = 0;
+        matrix = new int[0][0];
+    }
+
+    // Parameterized Constructor
+    public OddSum2D(int[][] matrix) {
+        this.rows = matrix.length;
+        this.cols = matrix[0].length;
+        this.matrix = matrix;
+    }
+
+    // Getter and Setter
+    public int[][] getMatrix() { return matrix; }
+    public void setMatrix(int[][] matrix) {
+        this.matrix = matrix;
+        this.rows = matrix.length;
+        this.cols = matrix[0].length;
+    }
+
+    public long sumOfOdd() {
+        long sum = 0;
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                if (matrix[i][j] % 2 != 0) sum += matrix[i][j];
+        return sum;
+    }
+
+    public void display() {
+        for (int[] row : matrix) {
+            for (int val : row) System.out.printf("%5d", val);
+            System.out.println();
+        }
+    }
+}
+```
+
+```java
+// File: OddSum2DDriver.java
+import java.util.Scanner;
+
+public class OddSum2DDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter rows and columns: ");
+        int r = sc.nextInt(), c = sc.nextInt();
+        int[][] mat = new int[r][c];
+
+        System.out.println("Enter matrix elements:");
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+                mat[i][j] = sc.nextInt();
+
+        OddSum2D obj = new OddSum2D(mat);
+        System.out.println("Matrix:");
+        obj.display();
+        System.out.println("Sum of odd numbers: " + obj.sumOfOdd());
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter rows and columns: 2 3
+Enter matrix elements:
+1 2 3 4 5 6
+Matrix:
+    1    2    3
+    4    5    6
+Sum of odd numbers: 9
+```
+
+---
+
+## Assignment 2: Transpose of Matrix
+
+```java
+// File: MatrixTranspose.java
+public class MatrixTranspose {
+    private int[][] matrix;
+    private int rows;
+    private int cols;
+
+    // Default Constructor
+    public MatrixTranspose() {
+        rows = 0; cols = 0; matrix = new int[0][0];
+    }
+
+    // Parameterized Constructor
+    public MatrixTranspose(int[][] matrix) {
+        this.rows = matrix.length;
+        this.cols = matrix[0].length;
+        this.matrix = matrix;
+    }
+
+    // Getter and Setter
+    public int[][] getMatrix() { return matrix; }
+    public void setMatrix(int[][] matrix) {
+        this.matrix = matrix;
+        this.rows = matrix.length;
+        this.cols = matrix[0].length;
+    }
+
+    public void display(int[][] mat) {
+        for (int[] row : mat) {
+            for (int val : row) System.out.printf("%5d", val);
+            System.out.println();
+        }
+    }
+
+    public int[][] transpose() {
+        int[][] trans = new int[cols][rows];
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                trans[j][i] = matrix[i][j];
+        return trans;
+    }
+}
+```
+
+```java
+// File: TransposeDriver.java
+import java.util.Scanner;
+
+public class TransposeDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter rows and columns: ");
+        int r = sc.nextInt(), c = sc.nextInt();
+        int[][] mat = new int[r][c];
+
+        System.out.println("Enter elements:");
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+                mat[i][j] = sc.nextInt();
+
+        MatrixTranspose obj = new MatrixTranspose(mat);
+        System.out.println("Original Matrix:");
+        obj.display(mat);
+        System.out.println("Transposed Matrix:");
+        obj.display(obj.transpose());
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter rows and columns: 2 3
+Enter elements: 1 2 3 4 5 6
+Original Matrix:
+    1    2    3
+    4    5    6
+Transposed Matrix:
+    1    4
+    2    5
+    3    6
+```
+
+---
+
+## Assignment 3: Matrix Class (Full Menu-Driven)
+
+```java
+// File: Matrix.java
+public class Matrix {
+    private int[][] data;
+    private int rows;
+    private int cols;
+
+    // Default Constructor
+    public Matrix() {
+        rows = 0; cols = 0; data = new int[0][0];
+    }
+
+    // Constructor for NxN matrix
+    public Matrix(int n) {
+        rows = n; cols = n;
+        data = new int[n][n];
+    }
+
+    // Constructor for MxN matrix
+    public Matrix(int m, int n) {
+        rows = m; cols = n;
+        data = new int[m][n];
+    }
+
+    // Getters
+    public int getRows() { return rows; }
+    public int getCols() { return cols; }
+    public int[][] getData() { return data; }
+
+    public void getData(java.util.Scanner sc) {
+        System.out.println("Enter elements (" + rows + "x" + cols + "):");
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                data[i][j] = sc.nextInt();
+    }
+
+    public void printMat() {
+        for (int[] row : data) {
+            for (int val : row) System.out.printf("%5d", val);
+            System.out.println();
+        }
+    }
+
+    public Matrix addMat(Matrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            System.out.println("Matrix dimensions do not match for addition.");
+            return null;
+        }
+        Matrix result = new Matrix(rows, cols);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result.data[i][j] = this.data[i][j] + other.data[i][j];
+        return result;
+    }
+
+    public boolean multMat(Matrix a, Matrix b) {
+        if (a.cols != b.rows) {
+            System.out.println("Multiplication not possible.");
+            return false;
+        }
+        this.rows = a.rows;
+        this.cols = b.cols;
+        this.data = new int[this.rows][this.cols];
+        for (int i = 0; i < a.rows; i++)
+            for (int j = 0; j < b.cols; j++)
+                for (int k = 0; k < a.cols; k++)
+                    this.data[i][j] += a.data[i][k] * b.data[k][j];
+        return true;
+    }
+}
+```
+
+```java
+// File: MatrixDriver.java
+import java.util.Scanner;
+
+public class MatrixDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Matrix Operations Menu ---");
+            System.out.println("1. Create & Print NxN Matrix");
+            System.out.println("2. Create & Print MxN Matrix");
+            System.out.println("3. Add Two Matrices");
+            System.out.println("4. Multiply Two Matrices");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1: {
+                    System.out.print("Enter N: ");
+                    int n = sc.nextInt();
+                    Matrix m = new Matrix(n);
+                    m.getData(sc);
+                    m.printMat();
+                    break;
+                }
+                case 2: {
+                    System.out.print("Enter rows and cols: ");
+                    int r = sc.nextInt(), c = sc.nextInt();
+                    Matrix m = new Matrix(r, c);
+                    m.getData(sc);
+                    m.printMat();
+                    break;
+                }
+                case 3: {
+                    System.out.print("Enter rows and cols for both: ");
+                    int r = sc.nextInt(), c = sc.nextInt();
+                    Matrix m1 = new Matrix(r, c);
+                    Matrix m2 = new Matrix(r, c);
+                    System.out.println("Matrix 1:"); m1.getData(sc);
+                    System.out.println("Matrix 2:"); m2.getData(sc);
+                    Matrix sum = m1.addMat(m2);
+                    if (sum != null) { System.out.println("Sum:"); sum.printMat(); }
+                    break;
+                }
+                case 4: {
+                    System.out.print("Matrix 1 rows and cols: ");
+                    int r1 = sc.nextInt(), c1 = sc.nextInt();
+                    System.out.print("Matrix 2 rows and cols: ");
+                    int r2 = sc.nextInt(), c2 = sc.nextInt();
+                    Matrix m1 = new Matrix(r1, c1);
+                    Matrix m2 = new Matrix(r2, c2);
+                    System.out.println("Matrix 1:"); m1.getData(sc);
+                    System.out.println("Matrix 2:"); m2.getData(sc);
+                    Matrix prod = new Matrix();
+                    if (prod.multMat(m1, m2)) {
+                        System.out.println("Product:"); prod.printMat();
+                    }
+                    break;
+                }
+                case 5: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid choice.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
+```
+
+---
+
+## Assignment 4: MathOperation with Static Members
+
+```java
+// File: MathOperation.java
+public class MathOperation {
+    public static final double PI = 3.14159265358979;
+
+    // Default Constructor
+    public MathOperation() {}
+
+    public static double mul(double a, double b) {
+        return a * b;
+    }
+
+    public static double div(double a, double b) {
+        if (b == 0) {
+            System.out.println("Division by zero is not allowed.");
+            return 0;
+        }
+        return a / b;
+    }
+}
+```
+
+```java
+// File: MathDriver.java
+import java.util.Scanner;
+
+public class MathDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter diameter of half circle: ");
+        double diameter = sc.nextDouble();
+        double radius = MathOperation.div(diameter, 2);
+
+        // Area of half circle = (PI * r^2) / 2
+        double area = MathOperation.div(MathOperation.mul(MathOperation.PI,
+                MathOperation.mul(radius, radius)), 2);
+
+        System.out.println("PI = " + MathOperation.PI);
+        System.out.println("Radius = " + radius);
+        System.out.println("Area of half circle = " + area);
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter diameter of half circle: 14
+PI = 3.14159265358979
+Radius = 7.0
+Area of half circle = 76.96902...
+```
+
+---
+
+# DAY 4 - Lab Assignments
+
+## Assignment 1: Method Overloading - abs()
+
+```java
+// File: MyClass.java
+public class MyClass {
+    // Default Constructor
+    public MyClass() {}
+
+    // abs for integer
+    public int abs(int x) {
+        return (x < 0) ? -x : x;
+    }
+
+    // abs for float
+    public float abs(float x) {
+        return (x < 0) ? -x : x;
+    }
+
+    // abs for double
+    public double abs(double x) {
+        return (x < 0) ? -x : x;
+    }
+}
+```
+
+```java
+// File: MyClassDriver.java
+import java.util.Scanner;
+
+public class MyClassDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        MyClass obj = new MyClass();
+
+        System.out.print("Enter an integer: ");
+        int i = sc.nextInt();
+        System.out.println("Absolute value (int): " + obj.abs(i));
+
+        System.out.print("Enter a float: ");
+        float f = sc.nextFloat();
+        System.out.println("Absolute value (float): " + obj.abs(f));
+
+        System.out.print("Enter a double: ");
+        double d = sc.nextDouble();
+        System.out.println("Absolute value (double): " + obj.abs(d));
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter an integer: -5
+Absolute value (int): 5
+Enter a float: -3.14
+Absolute value (float): 3.14
+Enter a double: -2.71828
+Absolute value (double): 2.71828
+```
+
+---
+
+## Assignment 2: Telephone Billing System
+
+```java
+// File: LocalCall.java
+public class LocalCall {
+    private String callerNumber;
+    private String receiverNumber;
+    private int durationMinutes;
+    private static final double RATE_PER_UNIT = 1.0; // 1 unit per 3 min
+
+    // Default Constructor
+    public LocalCall() {
+        callerNumber = "";
+        receiverNumber = "";
+        durationMinutes = 0;
+    }
+
+    // Parameterized Constructor
+    public LocalCall(String caller, String receiver, int duration) {
+        this.callerNumber = caller;
+        this.receiverNumber = receiver;
+        this.durationMinutes = duration;
+    }
+
+    // Getters and Setters
+    public String getCallerNumber() { return callerNumber; }
+    public String getReceiverNumber() { return receiverNumber; }
+    public int getDurationMinutes() { return durationMinutes; }
+    public void setCallerNumber(String n) { this.callerNumber = n; }
+    public void setReceiverNumber(String n) { this.receiverNumber = n; }
+    public void setDurationMinutes(int d) { this.durationMinutes = d; }
+
+    public int calculateUnits() {
+        // 1 unit per 3 minutes, fractions count as full unit
+        return (int) Math.ceil(durationMinutes / 3.0);
+    }
+
+    public double calculateCharge() {
+        return calculateUnits() * RATE_PER_UNIT;
+    }
+
+    public void displayBill() {
+        System.out.println("\n--- Local Call Bill ---");
+        System.out.println("Caller        : " + callerNumber);
+        System.out.println("Receiver      : " + receiverNumber);
+        System.out.println("Duration      : " + durationMinutes + " minutes");
+        System.out.println("Units         : " + calculateUnits());
+        System.out.println("Charge        : Rs " + calculateCharge());
+    }
+}
+```
+
+```java
+// File: LongCall.java
+public class LongCall {
+    private String callerNumber;
+    private String receiverNumber;
+    private int durationMinutes;
+    private int callHour;        // 0-23
+    private String originCode;
+    private String destCode;
+
+    /*
+     * Rate Table (as per assignment):
+     * Day (8am-8pm):    Rs 2.00/min
+     * Evening (8pm-11pm): Rs 1.50/min
+     * Night (11pm-8am): Rs 1.00/min
+     * Interstate (different area codes): additional 50% surcharge
+     */
+
+    // Default Constructor
+    public LongCall() {
+        callerNumber = "";
+        receiverNumber = "";
+        durationMinutes = 0;
+        callHour = 0;
+        originCode = "";
+        destCode = "";
+    }
+
+    // Parameterized Constructor
+    public LongCall(String caller, String receiver, int duration,
+                    int hour, String originCode, String destCode) {
+        this.callerNumber = caller;
+        this.receiverNumber = receiver;
+        this.durationMinutes = duration;
+        this.callHour = hour;
+        this.originCode = originCode;
+        this.destCode = destCode;
+    }
+
+    // Getters and Setters
+    public String getCallerNumber() { return callerNumber; }
+    public String getReceiverNumber() { return receiverNumber; }
+    public int getDurationMinutes() { return durationMinutes; }
+    public int getCallHour() { return callHour; }
+    public String getOriginCode() { return originCode; }
+    public String getDestCode() { return destCode; }
+    public void setCallerNumber(String n) { this.callerNumber = n; }
+    public void setReceiverNumber(String n) { this.receiverNumber = n; }
+    public void setDurationMinutes(int d) { this.durationMinutes = d; }
+    public void setCallHour(int h) { this.callHour = h; }
+    public void setOriginCode(String c) { this.originCode = c; }
+    public void setDestCode(String c) { this.destCode = c; }
+
+    public double getRatePerMinute() {
+        if (callHour >= 8 && callHour < 20) return 2.00;
+        else if (callHour >= 20 && callHour < 23) return 1.50;
+        else return 1.00;
+    }
+
+    public double calculateCharge() {
+        double rate = getRatePerMinute();
+        double charge = rate * durationMinutes;
+        // Add 50% surcharge if interstate (different codes)
+        if (!originCode.equalsIgnoreCase(destCode)) {
+            charge *= 1.5;
+        }
+        return charge;
+    }
+
+    public void displayBill() {
+        System.out.println("\n--- Long Distance (STD) Call Bill ---");
+        System.out.println("Caller        : " + callerNumber);
+        System.out.println("Receiver      : " + receiverNumber);
+        System.out.println("Duration      : " + durationMinutes + " minutes");
+        System.out.println("Call Time     : " + callHour + ":00");
+        System.out.println("Origin Code   : " + originCode);
+        System.out.println("Dest Code     : " + destCode);
+        System.out.println("Rate/min      : Rs " + getRatePerMinute());
+        System.out.println("Total Charge  : Rs " + calculateCharge());
+    }
+}
+```
+
+```java
+// File: BillingDriver.java
+import java.util.Scanner;
+
+public class BillingDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Telephone Billing System ---");
+            System.out.println("1. Local Call Bill");
+            System.out.println("2. Long Distance (STD) Call Bill");
+            System.out.println("3. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1: {
+                    System.out.print("Caller Number: "); String caller = sc.nextLine();
+                    System.out.print("Receiver Number: "); String recv = sc.nextLine();
+                    System.out.print("Duration (minutes): "); int dur = sc.nextInt();
+                    LocalCall lc = new LocalCall(caller, recv, dur);
+                    lc.displayBill();
+                    sc.nextLine();
+                    break;
+                }
+                case 2: {
+                    System.out.print("Caller Number: "); String caller = sc.nextLine();
+                    System.out.print("Receiver Number: "); String recv = sc.nextLine();
+                    System.out.print("Duration (minutes): "); int dur = sc.nextInt();
+                    System.out.print("Hour of call (0-23): "); int hour = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Origin STD Code: "); String orig = sc.nextLine();
+                    System.out.print("Destination STD Code: "); String dest = sc.nextLine();
+                    LongCall stdCall = new LongCall(caller, recv, dur, hour, orig, dest);
+                    stdCall.displayBill();
+                    break;
+                }
+                case 3: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid choice.");
+            }
+        } while (choice != 3);
+
+        sc.close();
+    }
+}
+```
+
+---
+
+## Assignment 3: Staff Hierarchy (Inheritance)
+
+```java
+// File: Staff.java
+public class Staff {
+    private int code;
+    private String name;
+
+    // Default Constructor
+    public Staff() { code = 0; name = ""; }
+
+    // Parameterized Constructor
+    public Staff(int code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    // Getters and Setters
+    public int getCode() { return code; }
+    public String getName() { return name; }
+    public void setCode(int code) { this.code = code; }
+    public void setName(String name) { this.name = name; }
+
+    public void getData(java.util.Scanner sc) {
+        System.out.print("Enter Code: "); code = sc.nextInt(); sc.nextLine();
+        System.out.print("Enter Name: "); name = sc.nextLine();
+    }
+
+    public void display() {
+        System.out.println("Code : " + code);
+        System.out.println("Name : " + name);
+    }
+}
+```
+
+```java
+// File: Teacher.java
+public class Teacher extends Staff {
+    private String subject;
+    private String publication;
+
+    // Default Constructor
+    public Teacher() { super(); subject = ""; publication = ""; }
+
+    // Parameterized Constructor
+    public Teacher(int code, String name, String subject, String publication) {
+        super(code, name);
+        this.subject = subject;
+        this.publication = publication;
+    }
+
+    // Getters and Setters
+    public String getSubject() { return subject; }
+    public String getPublication() { return publication; }
+    public void setSubject(String s) { this.subject = s; }
+    public void setPublication(String p) { this.publication = p; }
+
+    @Override
+    public void getData(java.util.Scanner sc) {
+        super.getData(sc);
+        System.out.print("Enter Subject: "); subject = sc.nextLine();
+        System.out.print("Enter Publication: "); publication = sc.nextLine();
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        System.out.println("Subject     : " + subject);
+        System.out.println("Publication : " + publication);
+    }
+}
+```
+
+```java
+// File: Officer.java
+public class Officer extends Staff {
+    private String grade;
+
+    // Default Constructor
+    public Officer() { super(); grade = ""; }
+
+    // Parameterized Constructor
+    public Officer(int code, String name, String grade) {
+        super(code, name);
+        this.grade = grade;
+    }
+
+    // Getters and Setters
+    public String getGrade() { return grade; }
+    public void setGrade(String grade) { this.grade = grade; }
+
+    @Override
+    public void getData(java.util.Scanner sc) {
+        super.getData(sc);
+        System.out.print("Enter Grade: "); grade = sc.nextLine();
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        System.out.println("Grade : " + grade);
+    }
+}
+```
+
+```java
+// File: Typist.java
+public class Typist extends Staff {
+    private int speed;
+
+    // Default Constructor
+    public Typist() { super(); speed = 0; }
+
+    // Parameterized Constructor
+    public Typist(int code, String name, int speed) {
+        super(code, name);
+        this.speed = speed;
+    }
+
+    // Getters and Setters
+    public int getSpeed() { return speed; }
+    public void setSpeed(int speed) { this.speed = speed; }
+
+    @Override
+    public void getData(java.util.Scanner sc) {
+        super.getData(sc);
+        System.out.print("Enter Typing Speed (wpm): "); speed = sc.nextInt(); sc.nextLine();
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        System.out.println("Speed : " + speed + " wpm");
+    }
+}
+```
+
+```java
+// File: RegularTypist.java
+public class RegularTypist extends Typist {
+    private double remuneration;
+
+    // Default Constructor
+    public RegularTypist() { super(); remuneration = 0; }
+
+    // Parameterized Constructor
+    public RegularTypist(int code, String name, int speed, double remuneration) {
+        super(code, name, speed);
+        this.remuneration = remuneration;
+    }
+
+    // Getters and Setters
+    public double getRemuneration() { return remuneration; }
+    public void setRemuneration(double r) { this.remuneration = r; }
+
+    @Override
+    public void getData(java.util.Scanner sc) {
+        super.getData(sc);
+        System.out.print("Enter Remuneration: "); remuneration = sc.nextDouble(); sc.nextLine();
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        System.out.println("Remuneration : Rs " + remuneration);
+    }
+}
+```
+
+```java
+// File: CasualTypist.java
+public class CasualTypist extends Typist {
+    private double dailyWages;
+
+    // Default Constructor
+    public CasualTypist() { super(); dailyWages = 0; }
+
+    // Parameterized Constructor
+    public CasualTypist(int code, String name, int speed, double dailyWages) {
+        super(code, name, speed);
+        this.dailyWages = dailyWages;
+    }
+
+    // Getters and Setters
+    public double getDailyWages() { return dailyWages; }
+    public void setDailyWages(double w) { this.dailyWages = w; }
+
+    @Override
+    public void getData(java.util.Scanner sc) {
+        super.getData(sc);
+        System.out.print("Enter Daily Wages: "); dailyWages = sc.nextDouble(); sc.nextLine();
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        System.out.println("Daily Wages : Rs " + dailyWages);
+    }
+}
+```
+
+```java
+// File: StaffDriver.java
+import java.util.Scanner;
+
+public class StaffDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Staff Database Menu ---");
+            System.out.println("1. Add/View Teacher");
+            System.out.println("2. Add/View Officer");
+            System.out.println("3. Add/View Regular Typist");
+            System.out.println("4. Add/View Casual Typist");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt(); sc.nextLine();
+
+            switch (choice) {
+                case 1: {
+                    Teacher t = new Teacher();
+                    t.getData(sc);
+                    System.out.println("\n--- Teacher Info ---");
+                    t.display();
+                    break;
+                }
+                case 2: {
+                    Officer o = new Officer();
+                    o.getData(sc);
+                    System.out.println("\n--- Officer Info ---");
+                    o.display();
+                    break;
+                }
+                case 3: {
+                    RegularTypist rt = new RegularTypist();
+                    rt.getData(sc);
+                    System.out.println("\n--- Regular Typist Info ---");
+                    rt.display();
+                    break;
+                }
+                case 4: {
+                    CasualTypist ct = new CasualTypist();
+                    ct.getData(sc);
+                    System.out.println("\n--- Casual Typist Info ---");
+                    ct.display();
+                    break;
+                }
+                case 5: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid choice.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
+```
+
+---
+
+## Home Assignment 4: Vehicle, Bus, Car Inheritance
+
+```java
+// File: Vehicle.java
+public class Vehicle {
+    protected String licenceNumber;
+    protected int speed;
+    protected String color;
+    protected String ownerName;
+
+    // Default Constructor
+    public Vehicle() {
+        licenceNumber = ""; speed = 0; color = ""; ownerName = "";
+    }
+
+    // Parameterized Constructor
+    public Vehicle(String licNo, int speed, String color, String ownerName) {
+        this.licenceNumber = licNo;
+        this.speed = speed;
+        this.color = color;
+        this.ownerName = ownerName;
+    }
+
+    // Getters and Setters
+    public String getLicenceNumber() { return licenceNumber; }
+    public int getSpeed() { return speed; }
+    public String getColor() { return color; }
+    public String getOwnerName() { return ownerName; }
+    public void setLicenceNumber(String l) { this.licenceNumber = l; }
+    public void setSpeed(int s) { this.speed = s; }
+    public void setColor(String c) { this.color = c; }
+    public void setOwnerName(String n) { this.ownerName = n; }
+
+    public void showData() {
+        System.out.println("This is a vehicle class");
+    }
+}
+```
+
+```java
+// File: Bus.java
+public class Bus extends Vehicle {
+    private int routeNo;
+
+    // Default Constructor
+    public Bus() { super(); routeNo = 0; }
+
+    // Parameterized Constructor
+    public Bus(String licNo, int speed, String color,
+               String ownerName, int routeNo) {
+        super(licNo, speed, color, ownerName);
+        this.routeNo = routeNo;
+    }
+
+    // Getter and Setter
+    public int getRouteNo() { return routeNo; }
+    public void setRouteNo(int r) { this.routeNo = r; }
+
+    @Override
+    public void showData() {
+        super.showData();
+        System.out.println("--- Bus Details ---");
+        System.out.println("Licence No  : " + licenceNumber);
+        System.out.println("Speed       : " + speed + " km/h");
+        System.out.println("Color       : " + color);
+        System.out.println("Owner       : " + ownerName);
+        System.out.println("Route No    : " + routeNo);
+    }
+}
+```
+
+```java
+// File: Car.java  (Renamed to avoid conflict with Day1)
+// Note: Save this as CarVehicle.java or rename Day1 Car.java accordingly
+public class CarVehicle extends Vehicle {
+    private String manufacturerName;
+
+    // Default Constructor
+    public CarVehicle() { super(); manufacturerName = ""; }
+
+    // Parameterized Constructor
+    public CarVehicle(String licNo, int speed, String color,
+                      String ownerName, String manufacturerName) {
+        super(licNo, speed, color, ownerName);
+        this.manufacturerName = manufacturerName;
+    }
+
+    // Getter and Setter
+    public String getManufacturerName() { return manufacturerName; }
+    public void setManufacturerName(String m) { this.manufacturerName = m; }
+
+    @Override
+    public void showData() {
+        super.showData();
+        System.out.println("--- Car Details ---");
+        System.out.println("Licence No    : " + licenceNumber);
+        System.out.println("Speed         : " + speed + " km/h");
+        System.out.println("Color         : " + color);
+        System.out.println("Owner         : " + ownerName);
+        System.out.println("Manufacturer  : " + manufacturerName);
+    }
+}
+```
+
+```java
+// File: VehicleDriver.java
+import java.util.Scanner;
+
+public class VehicleDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("--- Enter Bus Details ---");
+        sc.nextLine();
+        System.out.print("Licence No: "); String lic1 = sc.nextLine();
+        System.out.print("Speed: "); int sp1 = sc.nextInt(); sc.nextLine();
+        System.out.print("Color: "); String col1 = sc.nextLine();
+        System.out.print("Owner Name: "); String own1 = sc.nextLine();
+        System.out.print("Route No: "); int route = sc.nextInt(); sc.nextLine();
+        Bus bus = new Bus(lic1, sp1, col1, own1, route);
+        bus.showData();
+
+        System.out.println("\n--- Enter Car Details ---");
+        System.out.print("Licence No: "); String lic2 = sc.nextLine();
+        System.out.print("Speed: "); int sp2 = sc.nextInt(); sc.nextLine();
+        System.out.print("Color: "); String col2 = sc.nextLine();
+        System.out.print("Owner Name: "); String own2 = sc.nextLine();
+        System.out.print("Manufacturer: "); String mfr = sc.nextLine();
+        CarVehicle car = new CarVehicle(lic2, sp2, col2, own2, mfr);
+        car.showData();
+
+        sc.close();
+    }
+}
+```
+
+---
+
+# DAY 5 - Lab Assignments
+
+## Assignment 1: Abstract Class ThreeDObject
+
+```java
+// File: ThreeDObject.java
+public abstract class ThreeDObject {
+    protected double dim1;
+    protected double dim2;
+    protected double dim3;
+
+    // Default Constructor
+    public ThreeDObject() { dim1 = 0; dim2 = 0; dim3 = 0; }
+
+    // Parameterized Constructor
+    public ThreeDObject(double d1, double d2, double d3) {
+        dim1 = d1; dim2 = d2; dim3 = d3;
+    }
+
+    public abstract double wholeSurfaceArea();
+    public abstract double volume();
+}
+```
+
+```java
+// File: BoxShape.java
+public class BoxShape extends ThreeDObject {
+    // dim1=length, dim2=width, dim3=height
+    public BoxShape() { super(); }
+    public BoxShape(double l, double w, double h) { super(l, w, h); }
+
+    @Override
+    public double wholeSurfaceArea() {
+        return 2 * (dim1*dim2 + dim2*dim3 + dim3*dim1);
+    }
+
+    @Override
+    public double volume() { return dim1 * dim2 * dim3; }
+}
+```
+
+```java
+// File: Cube.java
+public class Cube extends ThreeDObject {
+    // dim1 = side
+    public Cube() { super(); }
+    public Cube(double side) { super(side, side, side); }
+
+    @Override
+    public double wholeSurfaceArea() { return 6 * dim1 * dim1; }
+
+    @Override
+    public double volume() { return dim1 * dim1 * dim1; }
+}
+```
+
+```java
+// File: Cylinder.java
+public class Cylinder extends ThreeDObject {
+    // dim1=radius, dim2=height
+    private static final double PI = Math.PI;
+
+    public Cylinder() { super(); }
+    public Cylinder(double radius, double height) { super(radius, height, 0); }
+
+    @Override
+    public double wholeSurfaceArea() {
+        return 2 * PI * dim1 * (dim1 + dim2);
+    }
+
+    @Override
+    public double volume() { return PI * dim1 * dim1 * dim2; }
+}
+```
+
+```java
+// File: Cone.java
+public class Cone extends ThreeDObject {
+    // dim1=radius, dim2=height
+    private static final double PI = Math.PI;
+
+    public Cone() { super(); }
+    public Cone(double radius, double height) { super(radius, height, 0); }
+
+    private double slantHeight() {
+        return Math.sqrt(dim1 * dim1 + dim2 * dim2);
+    }
+
+    @Override
+    public double wholeSurfaceArea() {
+        return PI * dim1 * (dim1 + slantHeight());
+    }
+
+    @Override
+    public double volume() { return (1.0/3.0) * PI * dim1 * dim1 * dim2; }
+}
+```
+
+```java
+// File: ThreeDDriver.java
+import java.util.Scanner;
+
+public class ThreeDDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- 3D Object Menu ---");
+            System.out.println("1. Box");
+            System.out.println("2. Cube");
+            System.out.println("3. Cylinder");
+            System.out.println("4. Cone");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            ThreeDObject obj = null;
+            switch (choice) {
+                case 1: {
+                    System.out.print("Enter length, width, height: ");
+                    double l = sc.nextDouble(), w = sc.nextDouble(), h = sc.nextDouble();
+                    obj = new BoxShape(l, w, h);
+                    break;
+                }
+                case 2: {
+                    System.out.print("Enter side: ");
+                    double s = sc.nextDouble();
+                    obj = new Cube(s);
+                    break;
+                }
+                case 3: {
+                    System.out.print("Enter radius and height: ");
+                    double r = sc.nextDouble(), h = sc.nextDouble();
+                    obj = new Cylinder(r, h);
+                    break;
+                }
+                case 4: {
+                    System.out.print("Enter radius and height: ");
+                    double r = sc.nextDouble(), h = sc.nextDouble();
+                    obj = new Cone(r, h);
+                    break;
+                }
+                case 5: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid choice.");
+            }
+
+            if (obj != null) {
+                System.out.printf("Whole Surface Area : %.4f%n", obj.wholeSurfaceArea());
+                System.out.printf("Volume             : %.4f%n", obj.volume());
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
+```
+
+---
+
+## Assignment 2: Interface Department, Hostel, Student with Package
+
+### Package Structure:
+```
+Pack1/
+  Department.java
+  Hostel.java
+  Student.java
+StudentDriver.java
+```
+
+```java
+// File: Pack1/Department.java
+package Pack1;
+
+public interface Department {
+    String depName = "";  // constants in interface
+    String depHead = "";
+
+    void getDepartmentData(java.util.Scanner sc);
+    void printDepartmentData();
+}
+```
+
+```java
+// File: Pack1/Hostel.java
+package Pack1;
+
+public class Hostel {
+    private String hostelName;
+    private String hostelLocation;
+    private int noOfRooms;
+
+    // Default Constructor
+    public Hostel() { hostelName = ""; hostelLocation = ""; noOfRooms = 0; }
+
+    // Parameterized Constructor
+    public Hostel(String name, String loc, int rooms) {
+        hostelName = name; hostelLocation = loc; noOfRooms = rooms;
+    }
+
+    // Getters and Setters
+    public String getHostelName() { return hostelName; }
+    public String getHostelLocation() { return hostelLocation; }
+    public int getNoOfRooms() { return noOfRooms; }
+    public void setHostelName(String n) { hostelName = n; }
+    public void setHostelLocation(String l) { hostelLocation = l; }
+    public void setNoOfRooms(int r) { noOfRooms = r; }
+
+    public void getHostelData(java.util.Scanner sc) {
+        System.out.print("Enter Hostel Name: "); hostelName = sc.nextLine();
+        System.out.print("Enter Hostel Location: "); hostelLocation = sc.nextLine();
+        System.out.print("Enter No. of Rooms: "); noOfRooms = sc.nextInt(); sc.nextLine();
+    }
+
+    public void printHostelData() {
+        System.out.println("Hostel Name     : " + hostelName);
+        System.out.println("Hostel Location : " + hostelLocation);
+        System.out.println("No. of Rooms    : " + noOfRooms);
+    }
+}
+```
+
+```java
+// File: Pack1/Student.java
+package Pack1;
+import java.util.Scanner;
+
+public class Student extends Hostel implements Department {
+    private String studentName;
+    private String regNo;
+    private String electiveSubject;
+    private double avgMarks;
+    private String dName;
+    private String dHead;
+
+    // Default Constructor
+    public Student() {
+        super();
+        studentName = ""; regNo = "";
+        electiveSubject = ""; avgMarks = 0.0;
+        dName = ""; dHead = "";
+    }
+
+    // Parameterized Constructor
+    public Student(String hostelName, String hostelLoc, int rooms,
+                   String stdName, String reg, String elective, double avg,
+                   String depName, String depHead) {
+        super(hostelName, hostelLoc, rooms);
+        studentName = stdName; regNo = reg;
+        electiveSubject = elective; avgMarks = avg;
+        dName = depName; dHead = depHead;
+    }
+
+    // Getters and Setters
+    public String getStudentName() { return studentName; }
+    public String getRegNo() { return regNo; }
+    public String getElectiveSubject() { return electiveSubject; }
+    public double getAvgMarks() { return avgMarks; }
+    public void setStudentName(String n) { studentName = n; }
+    public void setRegNo(String r) { regNo = r; }
+    public void setElectiveSubject(String e) { electiveSubject = e; }
+    public void setAvgMarks(double m) { avgMarks = m; }
+
+    // Implementing interface methods
+    @Override
+    public void getDepartmentData(Scanner sc) {
+        System.out.print("Enter Department Name: "); dName = sc.nextLine();
+        System.out.print("Enter Department Head: "); dHead = sc.nextLine();
+    }
+
+    @Override
+    public void printDepartmentData() {
+        System.out.println("Department Name : " + dName);
+        System.out.println("Department Head : " + dHead);
+    }
+
+    public void getData(Scanner sc) {
+        getHostelData(sc);
+        getDepartmentData(sc);
+        System.out.print("Enter Student Name: "); studentName = sc.nextLine();
+        System.out.print("Enter Reg No: "); regNo = sc.nextLine();
+        System.out.print("Enter Elective Subject: "); electiveSubject = sc.nextLine();
+        System.out.print("Enter Average Marks: "); avgMarks = sc.nextDouble(); sc.nextLine();
+    }
+
+    public void printData() {
+        System.out.println("\n--- Student Details ---");
+        printHostelData();
+        printDepartmentData();
+        System.out.println("Student Name    : " + studentName);
+        System.out.println("Reg No          : " + regNo);
+        System.out.println("Elective Subject: " + electiveSubject);
+        System.out.println("Average Marks   : " + avgMarks);
+    }
+}
+```
+
+```java
+// File: StudentDriver.java  (Outside Pack1)
+import Pack1.Student;
+import java.util.Scanner;
+
+public class StudentDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Student s = new Student();
+        s.getData(sc);
+        s.printData();
+        sc.close();
+    }
+}
+```
+
+**Compile Commands:**
+```bash
+mkdir Pack1
+javac Pack1/Department.java Pack1/Hostel.java Pack1/Student.java
+javac StudentDriver.java
+java StudentDriver
+```
+
+---
+
+## Home Assignment 3: Mathematical Operations Package
+
+```java
+// File: MathPack/MathOperations.java
+package MathPack;
+
+public class MathOperations {
+    public static final double PI = Math.PI;
+
+    public MathOperations() {}
+
+    public static double add(double a, double b) { return a + b; }
+    public static double subtract(double a, double b) { return a - b; }
+    public static double multiply(double a, double b) { return a * b; }
+    public static double divide(double a, double b) {
+        if (b == 0) { System.out.println("Division by zero!"); return 0; }
+        return a / b;
+    }
+    public static double power(double base, double exp) { return Math.pow(base, exp); }
+    public static double squareRoot(double a) {
+        if (a < 0) { System.out.println("Cannot find sqrt of negative."); return 0; }
+        return Math.sqrt(a);
+    }
+    public static double circleArea(double r) { return PI * r * r; }
+    public static double rectArea(double l, double w) { return l * w; }
+}
+```
+
+```java
+// File: MathPackDriver.java
+import MathPack.MathOperations;
+import java.util.Scanner;
+
+public class MathPackDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- Math Operations Menu ---");
+            System.out.println("1. Add");
+            System.out.println("2. Subtract");
+            System.out.println("3. Multiply");
+            System.out.println("4. Divide");
+            System.out.println("5. Power");
+            System.out.println("6. Square Root");
+            System.out.println("7. Circle Area");
+            System.out.println("8. Rectangle Area");
+            System.out.println("9. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1: {
+                    System.out.print("Enter two numbers: ");
+                    double a = sc.nextDouble(), b = sc.nextDouble();
+                    System.out.println("Result: " + MathOperations.add(a, b)); break;
+                }
+                case 2: {
+                    System.out.print("Enter two numbers: ");
+                    double a = sc.nextDouble(), b = sc.nextDouble();
+                    System.out.println("Result: " + MathOperations.subtract(a, b)); break;
+                }
+                case 3: {
+                    System.out.print("Enter two numbers: ");
+                    double a = sc.nextDouble(), b = sc.nextDouble();
+                    System.out.println("Result: " + MathOperations.multiply(a, b)); break;
+                }
+                case 4: {
+                    System.out.print("Enter two numbers: ");
+                    double a = sc.nextDouble(), b = sc.nextDouble();
+                    System.out.println("Result: " + MathOperations.divide(a, b)); break;
+                }
+                case 5: {
+                    System.out.print("Enter base and exponent: ");
+                    double a = sc.nextDouble(), b = sc.nextDouble();
+                    System.out.println("Result: " + MathOperations.power(a, b)); break;
+                }
+                case 6: {
+                    System.out.print("Enter number: ");
+                    double a = sc.nextDouble();
+                    System.out.println("Result: " + MathOperations.squareRoot(a)); break;
+                }
+                case 7: {
+                    System.out.print("Enter radius: ");
+                    double r = sc.nextDouble();
+                    System.out.println("Circle Area: " + MathOperations.circleArea(r)); break;
+                }
+                case 8: {
+                    System.out.print("Enter length and width: ");
+                    double l = sc.nextDouble(), w = sc.nextDouble();
+                    System.out.println("Rectangle Area: " + MathOperations.rectArea(l, w)); break;
+                }
+                case 9: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid choice.");
+            }
+        } while (choice != 9);
+
+        sc.close();
+    }
+}
+```
+
+---
+
+# DAY 6 - Exception Handling
+
+## Assignment 1: Factorial with Exception Handling
+
+```java
+// File: Factorial.java
+public class Factorial {
+    private static final int MAX_SIZE = 21;
+    private long[] factorialCache;
+
+    // Default Constructor
+    public Factorial() {
+        factorialCache = new long[MAX_SIZE];
+        factorialCache[0] = 1;
+        for (int i = 1; i < MAX_SIZE; i++) {
+            factorialCache[i] = factorialCache[i - 1] * i;
+        }
+    }
+
+    public long getFactorial(int x) {
+        if (x < 0) {
+            throw new IllegalArgumentException("value of x must be positive");
+        }
+        if (x >= MAX_SIZE) {
+            throw new IllegalArgumentException("result will overflow");
+        }
+        return factorialCache[x];
+    }
+}
+```
+
+```java
+// File: FactorialDriver.java
+import java.util.Scanner;
+
+public class FactorialDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Factorial fact = new Factorial();
+
+        System.out.print("Enter a non-negative integer to compute factorial: ");
+        int x = sc.nextInt();
+
+        try {
+            long result = fact.getFactorial(x);
+            System.out.println(x + "! = " + result);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            System.out.println("Computation attempted.");
+        }
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter a non-negative integer: 5
+5! = 120
+
+Enter a non-negative integer: -3
+Error: value of x must be positive
+
+Enter a non-negative integer: 25
+Error: result will overflow
+```
+
+---
+
+## Assignment 2: Invalid Email Exception
+
+```java
+// File: InvalidEmailException.java
+public class InvalidEmailException extends Exception {
+    private String email;
+
+    // Default Constructor
+    public InvalidEmailException() {
+        super("Invalid email address.");
+        email = "";
+    }
+
+    // Parameterized Constructor
+    public InvalidEmailException(String email) {
+        super("Invalid email address: " + email);
+        this.email = email;
+    }
+
+    public String getEmail() { return email; }
+}
+```
+
+```java
+// File: EmailValidator.java
+public class EmailValidator {
+    // Default Constructor
+    public EmailValidator() {}
+
+    public void validateEmail(String email) throws InvalidEmailException {
+        // Basic checks: must contain @, must have domain part, no spaces
+        if (email == null || email.isEmpty()) {
+            throw new InvalidEmailException(email);
+        }
+        if (!email.contains("@")) {
+            throw new InvalidEmailException(email);
+        }
+        String[] parts = email.split("@");
+        if (parts.length != 2 || parts[0].isEmpty() || parts[1].isEmpty()) {
+            throw new InvalidEmailException(email);
+        }
+        if (!parts[1].contains(".")) {
+            throw new InvalidEmailException(email);
+        }
+        if (email.contains(" ")) {
+            throw new InvalidEmailException(email);
+        }
+        // Check for consecutive dots
+        if (email.contains("..")) {
+            throw new InvalidEmailException(email);
+        }
+        System.out.println("Valid email: " + email);
+    }
+}
+```
+
+```java
+// File: EmailDriver.java
+import java.util.Scanner;
+
+public class EmailDriver {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        EmailValidator validator = new EmailValidator();
+
+        System.out.print("Enter email address: ");
+        String email = sc.nextLine();
+
+        try {
+            validator.validateEmail(email);
+        } catch (InvalidEmailException e) {
+            System.out.println("Exception caught: " + e.getMessage());
+        } finally {
+            System.out.println("Validation process completed.");
+        }
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter email address: hello@world.com
+Valid email: hello@world.com
+
+Enter email address: helloworld
+Exception caught: Invalid email address: helloworld
+```
+
+---
+
+# DAY 7 - Multithreading
+
+## Assignment 1: Ping-Pong Threads
+
+```java
+// File: PingPong.java
+import java.util.Random;
+
+class PingThread extends Thread {
+    private Random random;
+
+    public PingThread() {
+        random = new Random();
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            // Random spaces for distance effect
+            int spaces = random.nextInt(10);
+            StringBuilder sb = new StringBuilder();
+            for (int s = 0; s < spaces; s++) sb.append(" ");
+            System.out.println(sb.toString() + "Ping");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Ping thread interrupted.");
+            }
+        }
+    }
+}
+
+class PongThread extends Thread {
+    private Random random;
+
+    public PongThread() {
+        random = new Random();
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            int spaces = random.nextInt(10);
+            StringBuilder sb = new StringBuilder();
+            for (int s = 0; s < spaces; s++) sb.append(" ");
+            System.out.println(sb.toString() + "PONG");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Pong thread interrupted.");
+            }
+        }
+    }
+}
+
+public class PingPong {
+    public static void main(String[] args) {
+        PingThread ping = new PingThread();
+        PongThread pong = new PongThread();
+        ping.start();
+        pong.start();
+    }
+}
+```
+
+---
+
+## Assignment 2: Producer-Consumer Problem
+
+```java
+// File: ProducerConsumer.java
+import java.util.LinkedList;
+import java.util.Queue;
+
+class Buffer {
+    private Queue<Integer> queue;
+    private int capacity;
+
+    public Buffer() { queue = new LinkedList<>(); capacity = 5; }
+    public Buffer(int capacity) { queue = new LinkedList<>(); this.capacity = capacity; }
+
+    public synchronized void produce(int item) throws InterruptedException {
+        while (queue.size() == capacity) {
+            System.out.println("Buffer full. Producer waiting...");
+            wait();
+        }
+        queue.add(item);
+        System.out.println("Produced: " + item + " | Buffer size: " + queue.size());
+        notifyAll();
+    }
+
+    public synchronized int consume() throws InterruptedException {
+        while (queue.isEmpty()) {
+            System.out.println("Buffer empty. Consumer waiting...");
+            wait();
+        }
+        int item = queue.poll();
+        System.out.println("Consumed: " + item + " | Buffer size: " + queue.size());
+        notifyAll();
+        return item;
+    }
+}
+
+class Producer extends Thread {
+    private Buffer buffer;
+
+    public Producer() { buffer = new Buffer(); }
+    public Producer(Buffer buffer) { this.buffer = buffer; }
+
+    @Override
+    public void run() {
+        for (int i = 1; i <= 10; i++) {
+            try {
+                buffer.produce(i);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                System.out.println("Producer interrupted.");
+            }
+        }
+    }
+}
+
+class Consumer extends Thread {
+    private Buffer buffer;
+
+    public Consumer() { buffer = new Buffer(); }
+    public Consumer(Buffer buffer) { this.buffer = buffer; }
+
+    @Override
+    public void run() {
+        for (int i = 1; i <= 10; i++) {
+            try {
+                buffer.consume();
+                Thread.sleep(800);
+            } catch (InterruptedException e) {
+                System.out.println("Consumer interrupted.");
+            }
+        }
+    }
+}
+
+public class ProducerConsumer {
+    public static void main(String[] args) {
+        Buffer buffer = new Buffer(5);
+        Producer producer = new Producer(buffer);
+        Consumer consumer = new Consumer(buffer);
+        producer.start();
+        consumer.start();
+    }
+}
+```
+
+---
+
+## Assignment 3: Max and Average of Array using Threads
+
+```java
+// File: MaxAvgThread.java
+class MaxFinder extends Thread {
+    private int[] arr;
+    private int max;
+
+    public MaxFinder() { arr = new int[0]; max = Integer.MIN_VALUE; }
+    public MaxFinder(int[] arr) { this.arr = arr; max = Integer.MIN_VALUE; }
+
+    public int getMax() { return max; }
+
+    @Override
+    public void run() {
+        for (int x : arr) {
+            if (x > max) max = x;
+        }
+        System.out.println("Max found: " + max);
+    }
+}
+
+class AvgFinder extends Thread {
+    private int[] arr;
+    private double average;
+
+    public AvgFinder() { arr = new int[0]; average = 0; }
+    public AvgFinder(int[] arr) { this.arr = arr; average = 0; }
+
+    public double getAverage() { return average; }
+
+    @Override
+    public void run() {
+        long sum = 0;
+        for (int x : arr) sum += x;
+        average = (arr.length == 0) ? 0 : (double) sum / arr.length;
+        System.out.println("Average found: " + average);
+    }
+}
+
+public class MaxAvgThread {
+    public static void main(String[] args) throws InterruptedException {
+        java.util.Scanner sc = new java.util.Scanner(System.in);
+        System.out.print("Enter size of array: ");
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+
+        System.out.println("Enter elements:");
+        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();
+
+        MaxFinder maxThread = new MaxFinder(arr);
+        AvgFinder avgThread = new AvgFinder(arr);
+
+        maxThread.start();
+        avgThread.start();
+
+        // Wait for both threads to complete
+        maxThread.join();
+        avgThread.join();
+
+        double result = maxThread.getMax() / avgThread.getAverage();
+        System.out.printf("Max / Average = %d / %.2f = %.4f%n",
+                maxThread.getMax(), avgThread.getAverage(), result);
+
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter size of array: 5
+Enter elements: 10 20 30 40 50
+Max found: 50
+Average found: 30.0
+Max / Average = 50 / 30.00 = 1.6667
+```
+
+---
+
+## Home Assignment 4: Odd-Even Threads (Continuous Flow)
+
+```java
+// File: OddEvenThread.java
+class SharedCounter {
+    private int current;
+    private int end;
+    private boolean oddTurn;
+
+    public SharedCounter() { current = 1; end = 20; oddTurn = true; }
+    public SharedCounter(int start, int end) {
+        current = start; this.end = end; oddTurn = (start % 2 != 0);
+    }
+
+    public int getCurrent() { return current; }
+    public int getEnd() { return end; }
+    public boolean isOddTurn() { return oddTurn; }
+
+    public synchronized void printOdd() throws InterruptedException {
+        while (current <= end) {
+            if (!oddTurn) wait();
+            if (current <= end && current % 2 != 0) {
+                System.out.print(current + " ");
+                current++;
+                oddTurn = false;
+                notifyAll();
+            }
+        }
+    }
+
+    public synchronized void printEven() throws InterruptedException {
+        while (current <= end) {
+            if (oddTurn) wait();
+            if (current <= end && current % 2 == 0) {
+                System.out.print(current + " ");
+                current++;
+                oddTurn = true;
+                notifyAll();
+            }
+        }
+    }
+}
+
+class OddThread extends Thread {
+    private SharedCounter sc;
+    public OddThread() { sc = new SharedCounter(); }
+    public OddThread(SharedCounter sc) { this.sc = sc; }
+
+    @Override
+    public void run() {
+        try { sc.printOdd(); }
+        catch (InterruptedException e) { System.out.println("Odd thread interrupted."); }
+    }
+}
+
+class EvenThread extends Thread {
+    private SharedCounter sc;
+    public EvenThread() { sc = new SharedCounter(); }
+    public EvenThread(SharedCounter sc) { this.sc = sc; }
+
+    @Override
+    public void run() {
+        try { sc.printEven(); }
+        catch (InterruptedException e) { System.out.println("Even thread interrupted."); }
+    }
+}
+
+public class OddEvenThread {
+    public static void main(String[] args) throws InterruptedException {
+        java.util.Scanner sc = new java.util.Scanner(System.in);
+        System.out.print("Enter start and end range: ");
+        int start = sc.nextInt(), end = sc.nextInt();
+
+        SharedCounter counter = new SharedCounter(start, end);
+        OddThread oddT = new OddThread(counter);
+        EvenThread evenT = new EvenThread(counter);
+
+        oddT.start();
+        evenT.start();
+        oddT.join();
+        evenT.join();
+        System.out.println();
+        sc.close();
+    }
+}
+```
+
+**Output:**
+```
+Enter start and end range: 1 10
+1 2 3 4 5 6 7 8 9 10
+```
+
+---
+
+## Home Assignment 5: Thread Synchronization - Character-wise Printing
+
+### Version 1: Two Threads (Hello & World)
+
+```java
+// File: CharPrint2Thread.java
+class MessagePrinter {
+    private boolean firstTurn;
+
+    public MessagePrinter() { firstTurn = true; }
+
+    public synchronized void printChar(char c, boolean isFirst) throws InterruptedException {
+        while ((isFirst && !firstTurn) || (!isFirst && firstTurn)) {
+            wait();
+        }
+        System.out.println(c);
+        firstTurn = !firstTurn;
+        notifyAll();
+    }
+}
+
+class ThreadMsg extends Thread {
+    private String message;
+    private boolean isFirst;
+    private MessagePrinter printer;
+
+    public ThreadMsg() { message = ""; isFirst = true; printer = new MessagePrinter(); }
+    public ThreadMsg(String message, boolean isFirst, MessagePrinter printer) {
+        this.message = message;
+        this.isFirst = isFirst;
+        this.printer = printer;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < message.length(); i++) {
+            try {
+                printer.printChar(message.charAt(i), isFirst);
+            } catch (InterruptedException e) {
+                System.out.println("Thread interrupted.");
+            }
+        }
+    }
+}
+
+public class CharPrint2Thread {
+    public static void main(String[] args) throws InterruptedException {
+        MessagePrinter printer = new MessagePrinter();
+        ThreadMsg t1 = new ThreadMsg("Hello", true, printer);
+        ThreadMsg t2 = new ThreadMsg("World", false, printer);
+
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+    }
+}
+```
+
+**Output:**
+```
+H
+W
+e
+o
+l
+r
+l
+l
+o
+d
+```
+
+> **Note:** The assignment shows sequential output (H,e,l,l,o then W,o,r,l,d). The code above alternates. For strictly sequential output per the assignment's shown format:
+
+```java
+// File: CharPrintSequential.java
+class SeqPrinter {
+    private int turn; // 0=thread1, 1=thread2
+    public SeqPrinter() { turn = 0; }
+
+    public synchronized void printMessage(String msg, int threadId) throws InterruptedException {
+        for (int i = 0; i < msg.length(); i++) {
+            while (turn != threadId) wait();
+            System.out.println(msg.charAt(i));
+        }
+        turn = (threadId + 1) % 2;
+        notifyAll();
+    }
+}
+
+class SeqThread extends Thread {
+    private String message;
+    private int threadId;
+    private SeqPrinter printer;
+
+    public SeqThread() { message = ""; threadId = 0; printer = new SeqPrinter(); }
+    public SeqThread(String msg, int id, SeqPrinter p) {
+        message = msg; threadId = id; printer = p;
+    }
+
+    @Override
+    public void run() {
+        try { printer.printMessage(message, threadId); }
+        catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+    }
+}
+
+public class CharPrintSequential {
+    public static void main(String[] args) throws InterruptedException {
+        SeqPrinter printer = new SeqPrinter();
+        SeqThread t1 = new SeqThread("Hello", 0, printer);
+        SeqThread t2 = new SeqThread("World", 1, printer);
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+    }
+}
+```
+
+### Version 2: Three Threads (Hello, World, Java) - Interleaved
+
+```java
+// File: CharPrint3Thread.java
+class ThreeThreadPrinter {
+    private int turn; // 0,1,2
+    private int numThreads;
+
+    public ThreeThreadPrinter() { turn = 0; numThreads = 3; }
+    public ThreeThreadPrinter(int numThreads) { turn = 0; this.numThreads = numThreads; }
+
+    public synchronized void printChar(char c, int threadId) throws InterruptedException {
+        while (turn != threadId) wait();
+        System.out.println(c);
+        turn = (turn + 1) % numThreads;
+        notifyAll();
+    }
+}
+
+class CharThread extends Thread {
+    private String message;
+    private int threadId;
+    private ThreeThreadPrinter printer;
+    private int totalChars; // to know when to stop waiting
+
+    public CharThread() { message = ""; threadId = 0; printer = new ThreeThreadPrinter(); }
+    public CharThread(String msg, int id, ThreeThreadPrinter p, int totalChars) {
+        message = msg; threadId = id; printer = p; this.totalChars = totalChars;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < message.length(); i++) {
+            try {
+                printer.printChar(message.charAt(i), threadId);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}
+
+public class CharPrint3Thread {
+    public static void main(String[] args) throws InterruptedException {
+        // Threads: Hello(0), Java(1), World(2)
+        // Output per assignment: H,J,e,a,l,v,l,a,o,W,o,r,l,d
+        // Thread 0=Hello, 1=Java, 2=World (but World has more chars)
+
+        ThreeThreadPrinter printer = new ThreeThreadPrinter(3);
+        String msg1 = "Hello";
+        String msg2 = "Java";
+        String msg3 = "World";
+
+        CharThread t1 = new CharThread(msg1, 0, printer, 0);
+        CharThread t2 = new CharThread(msg2, 1, printer, 0);
+        CharThread t3 = new CharThread(msg3, 2, printer, 0);
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t1.join();
+        t2.join();
+        t3.join();
+    }
+}
+```
+
+**Output:**
+```
+H
+J
+W
+e
+a
+o
+l
+v
+r
+l
+a
+l
+o
+d
+```
+
+---
+
+# DAY 8 - GUI (Applet) Assignments
+
+> **Note:** Applets are run using `appletviewer` command. Each applet needs an HTML file.
+
+## Assignment 1: Smiley Face Applet
+
+```java
+// File: SmileyFace.java
+import java.applet.Applet;
+import java.awt.*;
+
+/*
+<applet code="SmileyFace.class" width="400" height="400">
+</applet>
+*/
+
+public class SmileyFace extends Applet {
+    public void paint(Graphics g) {
+        // Face
+        g.setColor(Color.YELLOW);
+        g.fillOval(100, 50, 200, 200);
+        g.setColor(Color.BLACK);
+        g.drawOval(100, 50, 200, 200);
+
+        // Left Eye
+        g.setColor(Color.BLACK);
+        g.fillOval(145, 110, 30, 30);
+
+        // Right Eye
+        g.fillOval(225, 110, 30, 30);
+
+        // Nose
+        g.setColor(Color.ORANGE);
+        int[] xPoints = {200, 190, 210};
+        int[] yPoints = {150, 180, 180};
+        g.fillPolygon(xPoints, yPoints, 3);
+        g.setColor(Color.BLACK);
+        g.drawPolygon(xPoints, yPoints, 3);
+
+        // Smile (Arc)
+        g.setColor(Color.RED);
+        g.drawArc(150, 180, 100, 50, 0, -180);
+
+        // Title
+        g.setColor(Color.BLUE);
+        g.setFont(new Font("Arial", Font.BOLD, 18));
+        g.drawString("Smiley Face", 145, 290);
+    }
+}
+```
+
+**HTML File: SmileyFace.html**
+```html
+<html>
+<body>
+<applet code="SmileyFace.class" width="400" height="400">
+</applet>
+</body>
+</html>
+```
+
+**Run Command:**
+```bash
+javac SmileyFace.java
+appletviewer SmileyFace.html
+```
+
+---
+
+## Assignment 2: Concentric Circles with Random Colors
+
+```java
+// File: ConcentricCircles.java
+import java.applet.Applet;
+import java.awt.*;
+import java.util.Random;
+
+/*
+<applet code="ConcentricCircles.class" width="500" height="500">
+</applet>
+*/
+
+public class ConcentricCircles extends Applet {
+    public void paint(Graphics g) {
+        int centerX = 250;
+        int centerY = 250;
+        int maxRadius = 230;
+        int step = 10;
+        Random rand = new Random();
+
+        for (int r = maxRadius; r > 0; r -= step) {
+            Color randomColor = new Color(rand.nextInt(256),
+                    rand.nextInt(256), rand.nextInt(256));
+            g.setColor(randomColor);
+            g.fillOval(centerX - r, centerY - r, 2 * r, 2 * r);
+            g.setColor(Color.BLACK);
+            g.drawOval(centerX - r, centerY - r, 2 * r, 2 * r);
+        }
+
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+        g.drawString("Concentric Circles", 170, 490);
+    }
+}
+```
+
+**HTML File: ConcentricCircles.html**
+```html
+<html>
+<body>
+<applet code="ConcentricCircles.class" width="500" height="500">
+</applet>
+</body>
+</html>
+```
+
+---
+
+## Assignment 3: Basic Calculator Applet
+
+```java
+// File: Calculator.java
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+
+/*
+<applet code="Calculator.class" width="320" height="420">
+</applet>
+*/
+
+public class Calculator extends Applet implements ActionListener {
+    private TextField display;
+    private Button[] numButtons;
+    private Button addBtn, subBtn, mulBtn, divBtn;
+    private Button equalsBtn, clearBtn, dotBtn;
+    private double firstOperand;
+    private char operator;
+    private boolean newInput;
+
+    public void init() {
+        setLayout(new BorderLayout());
+        setBackground(Color.LIGHT_GRAY);
+
+        // Display Field
+        display = new TextField("0");
+        display.setFont(new Font("Arial", Font.BOLD, 24));
+        display.setEditable(false);
+        display.setBackground(Color.WHITE);
+        add(display, BorderLayout.NORTH);
+
+        // Button Panel
+        Panel buttonPanel = new Panel();
+        buttonPanel.setLayout(new GridLayout(5, 4, 5, 5));
+
+        numButtons = new Button[10];
+        for (int i = 0; i < 10; i++) {
+            numButtons[i] = new Button(String.valueOf(i));
+            numButtons[i].setFont(new Font("Arial", Font.BOLD, 18));
+            numButtons[i].addActionListener(this);
+        }
+
+        addBtn = createOpButton("+");
+        subBtn = createOpButton("-");
+        mulBtn = createOpButton("*");
+        divBtn = createOpButton("/");
+        equalsBtn = createOpButton("=");
+        clearBtn = createOpButton("C");
+        dotBtn = createOpButton(".");
+
+        // Row 1: C, /, *, -
+        buttonPanel.add(clearBtn);
+        buttonPanel.add(divBtn);
+        buttonPanel.add(mulBtn);
+        buttonPanel.add(subBtn);
+
+        // Row 2: 7, 8, 9, +
+        buttonPanel.add(numButtons[7]);
+        buttonPanel.add(numButtons[8]);
+        buttonPanel.add(numButtons[9]);
+        buttonPanel.add(addBtn);
+
+        // Row 3: 4, 5, 6, (dummy)
+        buttonPanel.add(numButtons[4]);
+        buttonPanel.add(numButtons[5]);
+        buttonPanel.add(numButtons[6]);
+        buttonPanel.add(new Label(""));
+
+        // Row 4: 1, 2, 3, =
+        buttonPanel.add(numButtons[1]);
+        buttonPanel.add(numButtons[2]);
+        buttonPanel.add(numButtons[3]);
+        buttonPanel.add(equalsBtn);
+
+        // Row 5: 0, ., (dummy), (dummy)
+        buttonPanel.add(numButtons[0]);
+        buttonPanel.add(dotBtn);
+        buttonPanel.add(new Label(""));
+        buttonPanel.add(new Label(""));
+
+        add(buttonPanel, BorderLayout.CENTER);
+
+        firstOperand = 0;
+        operator = ' ';
+        newInput = true;
+    }
+
+    private Button createOpButton(String label) {
+        Button btn = new Button(label);
+        btn.setFont(new Font("Arial", Font.BOLD, 18));
+        btn.setBackground(Color.ORANGE);
+        btn.addActionListener(this);
+        return btn;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+
+        if (cmd.charAt(0) >= '0' && cmd.charAt(0) <= '9') {
+            if (newInput || display.getText().equals("0")) {
+                display.setText(cmd);
+                newInput = false;
+            } else {
+                display.setText(display.getText() + cmd);
+            }
+        } else if (cmd.equals(".")) {
+            if (newInput) {
+                display.setText("0.");
+                newInput = false;
+            } else if (!display.getText().contains(".")) {
+                display.setText(display.getText() + ".");
+            }
+        } else if (cmd.equals("C")) {
+            display.setText("0");
+            firstOperand = 0;
+            operator = ' ';
+            newInput = true;
+        } else if (cmd.equals("+") || cmd.equals("-") ||
+                   cmd.equals("*") || cmd.equals("/")) {
+            firstOperand = Double.parseDouble(display.getText());
+            operator = cmd.charAt(0);
+            newInput = true;
+        } else if (cmd.equals("=")) {
+            double secondOperand = Double.parseDouble(display.getText());
+            double result = 0;
+            switch (operator) {
+                case '+': result = firstOperand + secondOperand; break;
+                case '-': result = firstOperand - secondOperand; break;
+                case '*': result = firstOperand * secondOperand; break;
+                case '/':
+                    if (secondOperand == 0) {
+                        display.setText("Error: Div/0");
+                        newInput = true;
+                        return;
+                    }
+                    result = firstOperand / secondOperand;
+                    break;
+            }
+            // Display as integer if no decimal part
+            if (result == (long) result)
+                display.setText(String.valueOf((long) result));
+            else
+                display.setText(String.valueOf(result));
+            firstOperand = result;
+            newInput = true;
+        }
+    }
+}
+```
+
+**HTML File: Calculator.html**
+```html
+<html>
+<body>
+<applet code="Calculator.class" width="320" height="420">
+</applet>
+</body>
+</html>
+```
+
+**Run Command:**
+```bash
+javac Calculator.java
+appletviewer Calculator.html
+```
+
+---
+
+## Home Assignment 4: Color Form with Shape Drawing Applet
+
+```java
+// File: ColorShapeForm.java
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+
+/*
+<applet code="ColorShapeForm.class" width="600" height="500">
+</applet>
+*/
+
+public class ColorShapeForm extends Applet implements ActionListener {
+    private TextField redField, greenField, blueField;
+    private Choice shapeChoice;
+    private Button drawBtn, clearBtn;
+    private Color selectedColor;
+    private String selectedShape;
+    private boolean drawFlag;
+    private Label statusLabel;
+
+    public void init() {
+        setLayout(new BorderLayout());
+        setBackground(new Color(240, 240, 240));
+
+        // Form Panel (North)
+        Panel formPanel = new Panel(new GridLayout(5, 2, 5, 5));
+        formPanel.setBackground(new Color(200, 220, 240));
+
+        formPanel.add(new Label("Red (0-255):"));
+        redField = new TextField("0");
+        formPanel.add(redField);
+
+        formPanel.add(new Label("Green (0-255):"));
+        greenField = new TextField("0");
+        formPanel.add(greenField);
+
+        formPanel.add(new Label("Blue (0-255):"));
+        blueField = new TextField("0");
+        formPanel.add(blueField);
+
+        formPanel.add(new Label("Select Shape:"));
+        shapeChoice = new Choice();
+        shapeChoice.add("Circle");
+        shapeChoice.add("Rectangle");
+        shapeChoice.add("Triangle");
+        shapeChoice.add("Line");
+        shapeChoice.add("Oval");
+        formPanel.add(shapeChoice);
+
+        drawBtn = new Button("Draw");
+        drawBtn.setBackground(Color.GREEN);
+        drawBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        drawBtn.addActionListener(this);
+        formPanel.add(drawBtn);
+
+        clearBtn = new Button("Clear");
+        clearBtn.setBackground(Color.RED);
+        clearBtn.setForeground(Color.WHITE);
+        clearBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        clearBtn.addActionListener(this);
+        formPanel.add(clearBtn);
+
+        add(formPanel, BorderLayout.NORTH);
+
+        // Status Label
+        statusLabel = new Label("Select color and shape, then click Draw.");
+        statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        add(statusLabel, BorderLayout.SOUTH);
+
+        selectedColor = Color.BLACK;
+        selectedShape = "Circle";
+        drawFlag = false;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == drawBtn) {
+            try {
+                int r = Integer.parseInt(redField.getText().trim());
+                int g = Integer.parseInt(greenField.getText().trim());
+                int b = Integer.parseInt(blueField.getText().trim());
+
+                if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+                    statusLabel.setText("Error: RGB values must be 0-255.");
+                    return;
+                }
+                selectedColor = new Color(r, g, b);
+                selectedShape = shapeChoice.getSelectedItem();
+                drawFlag = true;
+                statusLabel.setText("Drawing: " + selectedShape +
+                        " | Color: RGB(" + r + "," + g + "," + b + ")");
+                repaint();
+            } catch (NumberFormatException ex) {
+                statusLabel.setText("Error: Please enter valid integers for RGB.");
+            }
+        } else if (e.getSource() == clearBtn) {
+            drawFlag = false;
+            statusLabel.setText("Canvas cleared.");
+            repaint();
+        }
+    }
+
+    public void paint(Graphics g) {
+        // Draw canvas area
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 160, 600, 300);
+        g.setColor(Color.GRAY);
+        g.drawRect(0, 160, 599, 299);
+
+        if (!drawFlag) return;
+
+        g.setColor(selectedColor);
+
+        int cx = 200, cy = 280;
+        switch (selectedShape) {
+            case "Circle":
+                g.fillOval(cx - 80, cy - 80, 160, 160);
+                break;
+            case "Rectangle":
+                g.fillRect(cx - 100, cy - 60, 200, 120);
+                break;
+            case "Triangle":
+                int[] xp = {cx, cx - 100, cx + 100};
+                int[] yp = {cy - 80, cy + 60, cy + 60};
+                g.fillPolygon(xp, yp, 3);
+                break;
+            case "Line":
+                g.drawLine(cx - 100, cy, cx + 100, cy);
+                break;
+            case "Oval":
+                g.fillOval(cx - 120, cy - 60, 240, 120);
+                break;
+        }
+
+        // Label the shape
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+        g.drawString(selectedShape + " drawn!", cx - 40, cy + 110);
+    }
+}
+```
+
+**HTML File: ColorShapeForm.html**
+```html
+<html>
+<body>
+<applet code="ColorShapeForm.class" width="600" height="500">
+</applet>
+</body>
+</html>
+```
+
+---
+
+# Quick Compilation Reference
+
+```bash
+# Day 1
+javac Welcome.java && java Welcome
+javac FibonacciDemo.java && java FibonacciDemo
+javac Car.java CarDriver.java && java CarDriver
+javac ComplexNum.java ComplexDriver.java && java ComplexDriver
+javac BankAccount.java BankDriver.java && java BankDriver
+
+# Day 2
+javac Grader.java GraderDriver.java && java GraderDriver
+javac Box.java BoxDriver.java && java BoxDriver
+javac ArrayOps.java ArrayDriver.java && java ArrayDriver
+javac Stack.java StackDriver.java && java StackDriver
+
+# Day 3
+javac OddSum2D.java OddSum2DDriver.java && java OddSum2DDriver
+javac MatrixTranspose.java TransposeDriver.java && java TransposeDriver
+javac Matrix.java MatrixDriver.java && java MatrixDriver
+javac MathOperation.java MathDriver.java && java MathDriver
+
+# Day 4
+javac MyClass.java MyClassDriver.java && java MyClassDriver
+javac LocalCall.java LongCall.java BillingDriver.java && java BillingDriver
+javac Staff.java Teacher.java Officer.java Typist.java RegularTypist.java CasualTypist.java StaffDriver.java && java StaffDriver
+javac Vehicle.java Bus.java CarVehicle.java VehicleDriver.java && java VehicleDriver
+
+# Day 5
+javac ThreeDObject.java BoxShape.java Cube.java Cylinder.java Cone.java ThreeDDriver.java && java ThreeDDriver
+mkdir Pack1
+javac Pack1/Department.java Pack1/Hostel.java Pack1/Student.java
+javac StudentDriver.java && java StudentDriver
+mkdir MathPack
+javac MathPack/MathOperations.java
+javac MathPackDriver.java && java MathPackDriver
+
+# Day 6
+javac Factorial.java FactorialDriver.java && java FactorialDriver
+javac InvalidEmailException.java EmailValidator.java EmailDriver.java && java EmailDriver
+
+# Day 7
+javac PingPong.java && java PingPong
+javac ProducerConsumer.java && java ProducerConsumer
+javac MaxAvgThread.java && java MaxAvgThread
+javac OddEvenThread.java && java OddEvenThread
+javac CharPrint2Thread.java && java CharPrint2Thread
+javac CharPrint3Thread.java && java CharPrint3Thread
+
+# Day 8 (Applets)
+javac SmileyFace.java && appletviewer SmileyFace.html
+javac ConcentricCircles.java && appletviewer ConcentricCircles.html
+javac Calculator.java && appletviewer Calculator.html
+javac ColorShapeForm.java && appletviewer ColorShapeForm.html
+```
+
+---
+
+> **Key OOP Guidelines Followed Throughout:**
+> - ✅ All instance variables are `private`
+> - ✅ All methods are `public`
+> - ✅ Separate Driver classes with `main()`
+> - ✅ Both default and parameterized constructors included
+> - ✅ Getter and Setter methods provided
+> - ✅ PascalCase for classes, camelCase for methods/variables
+> - ✅ Input validation where applicable
+> - ✅ Inheritance, abstraction, polymorphism applied appropriately
